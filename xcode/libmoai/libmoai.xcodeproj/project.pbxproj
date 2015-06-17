@@ -4780,6 +4780,14 @@
 		CDE440171AC0D27600C745DB /* ZLFrustumFitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDE440101AC0D27600C745DB /* ZLFrustumFitter.cpp */; };
 		CDE440181AC0D27600C745DB /* ZLFrustumFitter.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE440111AC0D27600C745DB /* ZLFrustumFitter.h */; };
 		CDE440191AC0D27600C745DB /* ZLFrustumFitter.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE440111AC0D27600C745DB /* ZLFrustumFitter.h */; };
+		CDE548071B314010001D6669 /* MOAIPlatformerBody2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDE548031B314010001D6669 /* MOAIPlatformerBody2D.cpp */; };
+		CDE548081B314010001D6669 /* MOAIPlatformerBody2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDE548031B314010001D6669 /* MOAIPlatformerBody2D.cpp */; };
+		CDE548091B314010001D6669 /* MOAIPlatformerBody2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE548041B314010001D6669 /* MOAIPlatformerBody2D.h */; };
+		CDE5480A1B314010001D6669 /* MOAIPlatformerBody2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE548041B314010001D6669 /* MOAIPlatformerBody2D.h */; };
+		CDE5480B1B314010001D6669 /* MOAIPlatformerFsm2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDE548051B314010001D6669 /* MOAIPlatformerFsm2D.cpp */; };
+		CDE5480C1B314010001D6669 /* MOAIPlatformerFsm2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CDE548051B314010001D6669 /* MOAIPlatformerFsm2D.cpp */; };
+		CDE5480D1B314010001D6669 /* MOAIPlatformerFsm2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE548061B314010001D6669 /* MOAIPlatformerFsm2D.h */; };
+		CDE5480E1B314010001D6669 /* MOAIPlatformerFsm2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE548061B314010001D6669 /* MOAIPlatformerFsm2D.h */; };
 		CDE7C5681B0C00440038A8C9 /* tesselator.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE7C5671B0C00440038A8C9 /* tesselator.h */; };
 		CDE7C5691B0C00440038A8C9 /* tesselator.h in Headers */ = {isa = PBXBuildFile; fileRef = CDE7C5671B0C00440038A8C9 /* tesselator.h */; };
 		CDECEE2018E0C87C00546426 /* mongoose.c in Sources */ = {isa = PBXBuildFile; fileRef = CD795EFE17F0901A006AEB47 /* mongoose.c */; };
@@ -7929,6 +7937,10 @@
 		CDE4400F1AC0D27600C745DB /* ZLFrustum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLFrustum.h; sourceTree = "<group>"; };
 		CDE440101AC0D27600C745DB /* ZLFrustumFitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ZLFrustumFitter.cpp; sourceTree = "<group>"; };
 		CDE440111AC0D27600C745DB /* ZLFrustumFitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZLFrustumFitter.h; sourceTree = "<group>"; };
+		CDE548031B314010001D6669 /* MOAIPlatformerBody2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAIPlatformerBody2D.cpp; sourceTree = "<group>"; };
+		CDE548041B314010001D6669 /* MOAIPlatformerBody2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAIPlatformerBody2D.h; sourceTree = "<group>"; };
+		CDE548051B314010001D6669 /* MOAIPlatformerFsm2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAIPlatformerFsm2D.cpp; sourceTree = "<group>"; };
+		CDE548061B314010001D6669 /* MOAIPlatformerFsm2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAIPlatformerFsm2D.h; sourceTree = "<group>"; };
 		CDE7C5671B0C00440038A8C9 /* tesselator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tesselator.h; path = ../../3rdparty/libtess2/Include/tesselator.h; sourceTree = "<group>"; };
 		CDE8A802155E42EF00C2DFF5 /* libmoai-osx-fmod-ex.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libmoai-osx-fmod-ex.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDEFD55A181ECB3E0058D772 /* MOAITextDesignParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAITextDesignParser.cpp; sourceTree = "<group>"; };
@@ -12261,6 +12273,10 @@
 				89BE6F41173AD0CA00DFE837 /* MOAICollisionShape.h */,
 				CD73A5FA188F0AD200DFACDB /* MOAICollisionWorld.cpp */,
 				CD73A5FB188F0AD200DFACDB /* MOAICollisionWorld.h */,
+				CDE548031B314010001D6669 /* MOAIPlatformerBody2D.cpp */,
+				CDE548041B314010001D6669 /* MOAIPlatformerBody2D.h */,
+				CDE548051B314010001D6669 /* MOAIPlatformerFsm2D.cpp */,
+				CDE548061B314010001D6669 /* MOAIPlatformerFsm2D.h */,
 				89BE6FF8173AD0CA00DFE837 /* MOAISurfaceDeck2D.cpp */,
 				89BE6FF9173AD0CA00DFE837 /* MOAISurfaceDeck2D.h */,
 				89BE6FFA173AD0CA00DFE837 /* MOAISurfaceSampler2D.cpp */,
@@ -13418,6 +13434,7 @@
 				CD4C3EB7180A63BB00C02381 /* MOAISensor.h in Headers */,
 				CD4C3ED2180A63BB00C02381 /* MOAITexture.h in Headers */,
 				CD34310D1B31175F002BEBFA /* MOAISingleTexture.h in Headers */,
+				CDE5480D1B314010001D6669 /* MOAIPlatformerFsm2D.h in Headers */,
 				CD4C3EE0180A63BB00C02381 /* MOAITransform2D.h in Headers */,
 				CD4C3EEC180A63BB00C02381 /* MOAIVectorPoly.h in Headers */,
 				CD9140971A0D6022002CC335 /* MOAIActionTree.h in Headers */,
@@ -13453,6 +13470,7 @@
 				CD78109B187CAA2D008B9C0A /* MOAITextStyleMap.h in Headers */,
 				CD6AFDA71B1683F800A36954 /* MOAIGeometryWriter.h in Headers */,
 				CD4C3E29180A63BB00C02381 /* MOAIFrameBufferTexture.h in Headers */,
+				CDE548091B314010001D6669 /* MOAIPlatformerBody2D.h in Headers */,
 				CD4C3E0A180A63BB00C02381 /* MOAICameraFitter2D.h in Headers */,
 				CD4C3E1E180A63BB00C02381 /* MOAIEaseType.h in Headers */,
 				CD4C3E9C180A63BB00C02381 /* MOAIProfilerEntryBase.h in Headers */,
@@ -13590,6 +13608,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDE5480E1B314010001D6669 /* MOAIPlatformerFsm2D.h in Headers */,
 				CD4C4073180A63C200C02381 /* MOAIGrid.h in Headers */,
 				CD4C4100180A63C200C02381 /* MOAITextStyle.h in Headers */,
 				CD4C40CA180A63C200C02381 /* MOAIProfilerContext.h in Headers */,
@@ -13632,6 +13651,7 @@
 				CDC5203D18A17EB700BCC12F /* MOAIShaderUniform.h in Headers */,
 				CD4C4048180A63C200C02381 /* MOAIDeck.h in Headers */,
 				CD4C4093180A63C200C02381 /* MOAIMesh.h in Headers */,
+				CDE5480A1B314010001D6669 /* MOAIPlatformerBody2D.h in Headers */,
 				CD4C411E180A63C200C02381 /* MOAIVectorPoly.h in Headers */,
 				CD4C40BA180A63C200C02381 /* MOAIPartitionResultMgr.h in Headers */,
 				CD4C40D6180A63C200C02381 /* MOAIProfilerScope.h in Headers */,
@@ -16926,6 +16946,7 @@
 				CD4C3E71180A63BB00C02381 /* MOAIParticleForce.cpp in Sources */,
 				CD4C3E73180A63BB00C02381 /* MOAIParticlePexPlugin.cpp in Sources */,
 				CD4C3E91180A63BB00C02381 /* MOAIPointerSensor.cpp in Sources */,
+				CDE5480B1B314010001D6669 /* MOAIPlatformerFsm2D.cpp in Sources */,
 				CD4C3E9F180A63BB00C02381 /* MOAIProfilerReportBase.cpp in Sources */,
 				CDE36E681A5F6C970095E863 /* MOAIImageFormatWebP.cpp in Sources */,
 				CD4C3E83180A63BB00C02381 /* MOAIPartitionLevel.cpp in Sources */,
@@ -16974,6 +16995,7 @@
 				CD48CF221A12F8F70029F932 /* MOAIRegion.cpp in Sources */,
 				CDE36E501A5F4E340095E863 /* MOAIImageFormatMgr.cpp in Sources */,
 				CD4C3E21180A63BB00C02381 /* MOAIFont.cpp in Sources */,
+				CDE548071B314010001D6669 /* MOAIPlatformerBody2D.cpp in Sources */,
 				CD4C3EC1180A63BB00C02381 /* MOAIStretchPatch2D.cpp in Sources */,
 				CD4C3E6B180A63BB00C02381 /* MOAIParticleCallbackPlugin.cpp in Sources */,
 				CD4C3E89180A63BB00C02381 /* MOAIPathFinder.cpp in Sources */,
@@ -17101,6 +17123,7 @@
 				CD4C409A180A63C200C02381 /* MOAINodeMgr.cpp in Sources */,
 				CD4C40B5180A63C200C02381 /* MOAIPartitionLevel.cpp in Sources */,
 				CD4C4055180A63C200C02381 /* MOAIFont_bmfont.cpp in Sources */,
+				CDE5480C1B314010001D6669 /* MOAIPlatformerFsm2D.cpp in Sources */,
 				CD4C4058180A63C200C02381 /* MOAIFrameBuffer.cpp in Sources */,
 				CD4C40B1180A63C200C02381 /* MOAIPartition.cpp in Sources */,
 				CD4C40CB180A63C200C02381 /* MOAIProfilerEntry.cpp in Sources */,
@@ -17149,6 +17172,7 @@
 				CD4C4020180A63C200C02381 /* MOAIAnim.cpp in Sources */,
 				CD4C40E4180A63C200C02381 /* MOAIScriptDeck.cpp in Sources */,
 				CD4C4111180A63C200C02381 /* MOAITransform2D.cpp in Sources */,
+				CDE548081B314010001D6669 /* MOAIPlatformerBody2D.cpp in Sources */,
 				CD4C40FF180A63C200C02381 /* MOAITextStyle.cpp in Sources */,
 				CD4C40E2180A63C200C02381 /* MOAIScissorRect.cpp in Sources */,
 				CD4C40D1180A63C200C02381 /* MOAIProfilerReportBase.cpp in Sources */,

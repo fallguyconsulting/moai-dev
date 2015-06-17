@@ -857,6 +857,27 @@ void MOAIDraw::DrawElements ( MOAIGfxBuffer* vtxBuffer, MOAIVertexFormat* vtxFor
 }
 
 //----------------------------------------------------------------//
+void MOAIDraw::DrawEllipseArcOutline ( float x, float y, float xRad, float yRad, float a0, float a1, float steps ) {
+
+	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
+
+	float angle = a0 * ( float )D2R;
+	float angleStep = (( a1 - a0 ) * ( float )D2R ) / ( float )steps;
+	
+	gfxDevice.BeginPrim ( ZGL_PRIM_LINE_STRIP );
+	
+	for ( u32 i = 0; i <= steps; ++i, angle += angleStep ) {
+		gfxDevice.WriteVtx (
+			x + ( Sin ( angle ) * xRad ),
+			y + ( Cos ( angle ) * yRad ),
+			0.0f
+		);
+		gfxDevice.WriteFinalColor4b ();
+	}
+	gfxDevice.EndPrim ();
+}
+
+//----------------------------------------------------------------//
 void MOAIDraw::DrawEllipseFill ( const ZLRect& rect, u32 steps ) {
 
 	float xRad = ( rect.mXMax - rect.mXMin ) * 0.5f;

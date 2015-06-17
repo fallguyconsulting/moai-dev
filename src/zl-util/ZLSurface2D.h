@@ -46,9 +46,9 @@ public:
 };
 
 //================================================================//
-// USSurface2D
+// ZLSurface2D
 //================================================================//
-class USSurface2D :
+class ZLSurface2D :
 	public ZLPlane2D {
 public:
 
@@ -61,21 +61,21 @@ public:
 	float			mXMax;
 	
 	//----------------------------------------------------------------//
-	void			ClampPoint			( ZLVec2D& p );
+	void			ClampPoint			( ZLVec2D& p ) const;
 	static void		DrawDebug			( ZLVec2D e0, ZLVec2D e1 );
-	bool			GetContact			( ZLVec2D& sphereLoc, ZLVec2D& contact, ZLVec2D& norm );
-	float			GetDepthAlongRay	( ZLVec2D& sphereLoc, ZLVec2D& ray );
-	bool			GetHit				( ZLVec2D& sphereLoc, ZLVec2D& move, SurfaceHit2D& hit ); // unit sphere
+	bool			GetContact			( ZLVec2D& sphereLoc, ZLVec2D& contact, ZLVec2D& norm ) const;
+	float			GetDepthAlongRay	( ZLVec2D& sphereLoc, ZLVec2D& ray ) const;
+	bool			GetHit				( ZLVec2D& sphereLoc, ZLVec2D& move, SurfaceHit2D& hit ) const; // unit sphere
 	static ZLVec2D	GetNorm				( const ZLVec2D& e0, const ZLVec2D& e1 );
-	bool			GetRayHit			( ZLVec2D& loc, ZLVec2D& ray, float& time ); // ray, no edges
-	bool			GetRayHit			( ZLVec2D& loc, ZLVec2D& ray, float pad, float& time ); // ray
-	void			GetSnapUp			( ZLVec2D& loc, float maxSnap, ZLVec2D& move, SurfaceSnap2D& snap );
-	bool			GetTouch			( ZLVec2D& sphereLoc, ZLSurfaceTouch2D& touch ); // unit sphere
+	bool			GetRayHit			( ZLVec2D& loc, ZLVec2D& ray, float& time ) const; // ray, no edges
+	bool			GetRayHit			( ZLVec2D& loc, ZLVec2D& ray, float pad, float& time ) const; // ray
+	void			GetSnapUp			( ZLVec2D& loc, float maxSnap, ZLVec2D& move, SurfaceSnap2D& snap ) const;
+	bool			GetTouch			( ZLVec2D& sphereLoc, ZLSurfaceTouch2D& touch ) const; // unit sphere
 	void			Init				( const ZLVec2D& e0, const ZLVec2D& e1 );
-	bool			IsBridge			( ZLVec2D& loc, ZLVec2D& move );
-	bool			IsLeaving			( ZLVec2D& loc, ZLVec2D& move );
-	bool			IsOn				( ZLVec2D& loc );
-	bool			IsOver				( ZLVec2D& loc );
+	bool			IsBridge			( ZLVec2D& loc, ZLVec2D& move ) const;
+	bool			IsLeaving			( ZLVec2D& loc, ZLVec2D& move ) const;
+	bool			IsOn				( ZLVec2D& loc ) const;
+	bool			IsOver				( ZLVec2D& loc ) const;
 };
 
 //================================================================//
@@ -97,7 +97,7 @@ public:
 
 	bool		mSnap;
 	float		mSnapDist;
-	USSurface2D	mSurface;
+	ZLSurface2D	mSurface;
 };
 
 #endif

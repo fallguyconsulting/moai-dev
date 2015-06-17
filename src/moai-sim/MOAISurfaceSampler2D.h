@@ -7,7 +7,7 @@ class MOAITransform;
 // MOAISurface2D
 //================================================================//
 class MOAISurface2D :
-	public USSurface2D {
+	public ZLSurface2D {
 public:
 
 	MOAITransform*	mSourcePrim;

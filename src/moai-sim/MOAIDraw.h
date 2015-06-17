@@ -62,6 +62,7 @@ public:
 	static void			DrawBoxDiagonals		( const ZLBox& box );
 	static void			DrawBoxOutline			( const ZLBox& box );
 	static void			DrawElements			( MOAIGfxBuffer* vtxBuffer, MOAIVertexFormat* vtxFormat, u32 count );
+	static void			DrawEllipseArcOutline	( float x, float y, float xRad, float yRad, float a0, float a1, float steps );
 	static void			DrawEllipseFill			( const ZLRect& rect, u32 steps );
 	static void			DrawEllipseFill			( float x, float y, float xRad, float yRad, u32 steps );
 	static void			DrawEllipseOutline		( const ZLRect& rect, u32 steps );
