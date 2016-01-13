@@ -18,14 +18,16 @@
 //================================================================//
 
 //----------------------------------------------------------------//
-void MOAIVertexArrayItem::Bind () {
+void MOAIVertexArrayItem::Bind ( bool useVAOs ) {
 
 	if ( this->mBuffer && this->mFormat ) {
-	
+		
 		MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
 	
 		gfxDevice.BindVertexBuffer ( this->mBuffer );
 		gfxDevice.BindVertexFormat ( this->mFormat );
+		
+		assert (( useVAOs && this->mBuffer->IsUsingVBOs ()) || ( !useVAOs )); // buffer objects must use VBOs to work with VAOs
 	}
 }
 
@@ -119,11 +121,11 @@ bool MOAIVertexArray::AffirmVertexBuffers ( u32 idx ) {
 }
 
 //----------------------------------------------------------------//
-void MOAIVertexArray::BindVertex () {
+void MOAIVertexArray::BindVertexArrayItems () {
 
 	size_t totalVBOs = this->mVertexBuffers.Size ();
 	for ( size_t i = 0; i < totalVBOs; ++i ) {
-		this->mVertexBuffers [ i ].Bind ();
+		this->mVertexBuffers [ i ].Bind ( this->mUseVAOs );
 	}
 }
 
@@ -174,35 +176,32 @@ void MOAIVertexArray::OnGPUBind () {
 		zglBindVertexArray ( vao );
 
 		if ( this->mNeedsFlush ) {
-			this->BindVertex ();
+			this->BindVertexArrayItems ();
 			this->mNeedsFlush = false;
 		}
 	}
 	else {
 	
-		this->BindVertex ();
+		this->BindVertexArrayItems ();
 	}
 }
 
 //----------------------------------------------------------------//
 bool MOAIVertexArray::OnGPUCreate () {
 
-	size_t totalVAOs = this->mVAOs.Size ();
-	
-	if ( !totalVAOs ) {
-		totalVAOs = 1;
-		this->ReserveVAOs ( totalVAOs );
-	}
-	
 	this->mUseVAOs = false;
 	
-	for ( size_t i = 0; i < totalVAOs; ++i ) {
-		u32 vao = zglCreateVertexArray (); // OK for this to return 0
-		if ( !vao ) return true;
-		this->mVAOs [ i ] = vao;
+	size_t totalVAOs = this->mVAOs.Size ();
+
+	if ( totalVAOs ) {
+		
+		for ( size_t i = 0; i < totalVAOs; ++i ) {
+			u32 vao = zglCreateVertexArray (); // OK for this to return 0
+			if ( !vao ) return true;
+			this->mVAOs [ i ] = vao;
+		}
+		this->mUseVAOs = true;
 	}
-	
-	this->mUseVAOs = true;
 	return true;
 }
 
@@ -222,7 +221,7 @@ void MOAIVertexArray::OnGPUUnbind () {
 	if ( this->mUseVAOs ) {
 		zglBindVertexArray ( 0 );
 	}
-	this->UnbindVertex ();
+	this->UnbindVertexArrayItems ();
 }
 
 //----------------------------------------------------------------//
@@ -319,7 +318,7 @@ void MOAIVertexArray::SetVertexBuffer ( u32 idx, MOAIVertexBuffer* vtxBuffer, MO
 }
 
 //----------------------------------------------------------------//
-void MOAIVertexArray::UnbindVertex () {
+void MOAIVertexArray::UnbindVertexArrayItems () {
 
 	size_t totalVBOs = this->mVertexBuffers.Size ();
 	for ( size_t i = 0; i < totalVBOs; ++i ) {

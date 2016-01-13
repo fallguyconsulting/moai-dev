@@ -26,10 +26,7 @@
 int MOAIInputMgr::_autoTimestamp ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIInputMgr, "" )
 	
-	self->mAutoTimestamp = state.GetValue < bool >( 2, true );
-	if ( self->mAutoTimestamp ) {
-		self->mTimebase = ZLDeviceTime::GetTimeInSeconds ();
-	}
+	self->SetAutotimestamp ( state.GetValue < bool >( 1, true ));
 	
 	return 0;
 }
@@ -38,7 +35,7 @@ int MOAIInputMgr::_autoTimestamp ( lua_State* L ) {
 int MOAIInputMgr::_deferEvents ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIInputMgr, "" )
 
-	bool defer = state.GetValue < bool >( 2, false );
+	bool defer = state.GetValue < bool >( 1, false );
 	self->DeferEvents ( defer );
 	
 	return 0;
@@ -57,7 +54,7 @@ int MOAIInputMgr::_discardEvents ( lua_State* L ) {
 int MOAIInputMgr::_playback ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIInputMgr, "" )
 	
-	self->mPlayback = state.GetValue < bool >( 2, true );
+	self->mPlayback = state.GetValue < bool >( 1, true );
 	
 	return 0;
 }
@@ -66,7 +63,7 @@ int MOAIInputMgr::_playback ( lua_State* L ) {
 int MOAIInputMgr::_setAutosuspend ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIInputMgr, "" )
 	
-	self->mAutosuspend = state.GetValue < double >( 2, 0 );
+	self->mAutosuspend = state.GetValue < double >( 1, 0 );
 	
 	return 0;
 }
@@ -75,7 +72,7 @@ int MOAIInputMgr::_setAutosuspend ( lua_State* L ) {
 int MOAIInputMgr::_setRecorder ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIInputMgr, "" )
 	
-	self->mRecorder.Set ( *self, state.GetLuaObject < MOAIStream >( 2, true ));
+	self->mRecorder.Set ( *self, state.GetLuaObject < MOAIStream >( 1, true ));
 	
 	return 0;
 
@@ -85,7 +82,7 @@ int MOAIInputMgr::_setRecorder ( lua_State* L ) {
 int MOAIInputMgr::_suspendEvents ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIInputMgr, "" )
 	
-	self->SuspendEvents ( state.GetValue ( 2, false ));
+	self->SuspendEvents ( state.GetValue ( 1, false ));
 	
 	return 0;
 }
@@ -194,6 +191,10 @@ MOAIInputMgr::MOAIInputMgr () :
 //----------------------------------------------------------------//
 MOAIInputMgr::~MOAIInputMgr () {
 
+	if ( this->mRecorder ) {
+		this->mRecorder->Flush ();
+	}
+
 	for ( u32 i = 0; i < this->mDevices.Size (); ++i ) {
 		this->LuaRelease ( this->mDevices [ i ]);
 	}
@@ -293,6 +294,15 @@ void MOAIInputMgr::ResetSensorState () {
 void MOAIInputMgr::SetAutosuspend ( double autosuspend ) {
 
 	this->mAutosuspend = autosuspend >= 0 ? autosuspend : 0;
+}
+
+//----------------------------------------------------------------//
+void MOAIInputMgr::SetAutotimestamp ( bool autotimestamp ) {
+
+	this->mAutoTimestamp = autotimestamp;
+	if ( this->mAutoTimestamp ) {
+		this->mTimebase = ZLDeviceTime::GetTimeInSeconds ();
+	}
 }
 
 //----------------------------------------------------------------//
@@ -400,6 +410,7 @@ bool MOAIInputMgr::WriteEventHeader ( u8 deviceID, u8 sensorID, u32 type ) {
 		this->Write < u8 >(( u8 )sensorID );
 		
 		double timestamp = this->mAutoTimestamp ? ZLDeviceTime::GetTimeInSeconds () : this->mTimestamp;
+		
 		this->Write < double >( timestamp - this->mTimebase );
 		
 		return true;

@@ -20,7 +20,7 @@ public:
 	MOAILuaSharedPtr < MOAIVertexFormat >		mFormat;
 	
 	//----------------------------------------------------------------//
-	void		Bind					();
+	void		Bind					( bool useVAOs );
 				MOAIVertexArrayItem		();
 				~MOAIVertexArrayItem	();
 	void		SetBufferAndFormat		( MOAIVertexArray& owner, MOAIVertexBuffer* buffer, MOAIVertexFormat* format );
@@ -28,7 +28,7 @@ public:
 };
 
 //================================================================//
-// MOAIMesh
+// MOAIVertexArray
 //================================================================//
 // TODO: doxygen
 class MOAIVertexArray :
@@ -50,7 +50,7 @@ protected:
 
 	//----------------------------------------------------------------//
 	bool				AffirmVertexBuffers			( u32 idx );
-	void				BindVertex					();
+	void				BindVertexArrayItems		();
 	bool				OnCPUCreate					(); // load or initialize any CPU-side resources required to create the GPU-side resource
 	void				OnCPUDestroy				(); // clear any CPU-side memory used by class
 	void				OnGPUBind					(); // select GPU-side resource on device for use
@@ -58,11 +58,13 @@ protected:
 	void				OnGPUDestroy				(); // schedule GPU-side resource for destruction
 	void				OnGPULost					(); // clear any handles or references to GPU-side (called by 'Abandon')
 	void				OnGPUUnbind					(); // unbind GPU-side resource
-	void				UnbindVertex				();
+	void				UnbindVertexArrayItems		();
 
 public:
 	
 	DECL_LUA_FACTORY ( MOAIVertexArray )
+	
+	IS ( UsingVAOs, mUseVAOs, true )
 	
 	//----------------------------------------------------------------//
 						MOAIVertexArray				();

@@ -122,7 +122,12 @@ int MOAIVertexFormat::_declareUV ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	getVertexSize
+	@text	Return the size (in bytes) of the vertex described by the vertex format.
+	
+	@in		MOAIVertexFormat self
+	@out	number vertexSizeInBytes
+*/
 int MOAIVertexFormat::_getVertexSize ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIVertexFormat, "U" )
 
@@ -149,13 +154,13 @@ MOAIVertexFormat* MOAIVertexFormat::AffirmVertexFormat ( MOAILuaState& state, in
 }
 
 //----------------------------------------------------------------//
-void MOAIVertexFormat::Bind () const {
+void MOAIVertexFormat::Bind ( const void* buffer ) const {
 
 	for ( u32 i = 0; i < this->mTotalAttributes; ++i ) {
 		
 		const MOAIVertexAttribute& attr = this->mAttributes [ i ];
 		
-		zglVertexAttribPointer ( attr.mIndex, attr.mSize, attr.mType, attr.mNormalized, this->mVertexSize, ( const void* )attr.mOffset );
+		zglVertexAttribPointer ( attr.mIndex, attr.mSize, attr.mType, attr.mNormalized, this->mVertexSize, ( const void* )(( size_t )buffer + attr.mOffset ));
 		zglEnableVertexAttribArray ( attr.mIndex );
 	}
 }

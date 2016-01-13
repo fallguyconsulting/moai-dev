@@ -67,7 +67,14 @@ int MOAIGfxResource::_setLoadingPolicy ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	setReloader
+	@text	The reloaded is called prior to recreating the resource. It should
+			in turn call the resources regular load or init methods.
+ 
+	@in		MOAIGfxResource self
+	@opt	function reloader
+	@out	nil
+*/
 int MOAIGfxResource::_setReloader ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIGfxResource, "U" )
 
@@ -264,7 +271,7 @@ bool MOAIGfxResource::PrepareForBind () {
 	if (( this->mState == STATE_NEW ) || ( this->mState == STATE_ERROR )) return false;
 
 	if ( !MOAIGfxDevice::Get ().GetHasContext ()) {
-		MOAILog ( 0, MOAILogMessages::MOAIGfxResource_MissingDevice );
+		MOAILogF ( 0, ZLLog::LOG_FATAL, MOAILogMessages::MOAIGfxResource_MissingDevice );
 		return false;
 	}
 

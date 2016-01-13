@@ -11,7 +11,56 @@
 //================================================================//
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	collapse
+	@text	Removes a series of spans from the stream and "collapses" the
+			remainder. Used to remove a series of regularly repeating bytes.
+			For example, if the stream contains vertices and user wishes to
+			remove the vertex normals.
+
+	@in		MOAIStream self
+	@in		number clipBase		Offset from the cursot to the first clip to remove.
+	@in		number clipSize		Size of the clip to remove.
+	@in		number chunkSize	The stride: the next clip will begin at clipBase + chunkSize.
+	@opt	number size			The amount of the stream to process. Default is stream.getLength () - stream.getCursor ()
+	@opt	boolean invert		Inverts the clip. Default value is false.
+	@out	number result		The new size in bytes of the collapsed section of the stream.
+*/
+int MOAIStream::_collapse ( lua_State* L ) {
+	MOAI_LUA_SETUP ( MOAIStream, "U" );
+	
+	MOAIStream* stream = state.GetLuaObject < MOAIStream >( 2, false );
+	
+	int idx = 3;
+	if ( !stream ) {
+		idx = 2;
+		stream = self;
+	}
+	
+	u32 clipBase		= state.GetValue < u32 >( idx++, 0 );
+	u32 clipSize		= state.GetValue < u32 >( idx++, 0 );
+	u32 chunkSize		= state.GetValue < u32 >( idx++, 0 );
+	u32 size			= state.GetValue < u32 >( idx++, ( u32 )( stream->GetLength () - stream->GetCursor ()));
+	bool invert			= state.GetValue < bool >( idx++, false );
+	
+	size_t result = self->Collapse ( *stream, clipBase, clipSize, chunkSize, size, invert );
+	
+	state.Push (( u32 ) result );
+	return 1;
+}
+
+//----------------------------------------------------------------//
+/**	@lua	compact
+	@text	If the stream is backed by an internal buffer, and the buffer may
+			be reallocated by the stream, compact () causes the buffer to be
+			reallocated so that it more closely matches the current length of the
+			stream.
+			
+			For streams that are not buffer backer or that may not be reallocated,
+			compact () has no effect.
+
+	@in		MOAIStream self
+	@out	number
+*/
 int MOAIStream::_compact ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIStream, "U" );
 	self->Compact ();
@@ -223,6 +272,19 @@ int MOAIStream::_readU16 ( lua_State* L ) {
 int MOAIStream::_readU32 ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIStream, "U" );
 	return self->ReadValues < u32 >( state, 2 );
+}
+
+//----------------------------------------------------------------//
+// TODO: doxygen
+int MOAIStream::_sample ( lua_State* L ) {
+	MOAI_LUA_SETUP ( MOAIStream, "U" );
+
+	u32 sampleSize		= state.GetValue < u32 >( 2, 1 );
+	u32 streamType		= state.GetValue < u32 >( 3, ZLSample::SAMPLE_FLOAT );
+	
+	state.Push ( self->Sample ( streamType, sampleSize ));
+
+	return 1;
 }
 
 //----------------------------------------------------------------//
@@ -617,12 +679,21 @@ void MOAIStream::RegisterLuaClass ( MOAILuaState& state ) {
 	state.SetField ( -1, "SEEK_CUR", ( u32 )SEEK_CUR );
 	state.SetField ( -1, "SEEK_END", ( u32 )SEEK_END );
 	state.SetField ( -1, "SEEK_SET", ( u32 )SEEK_SET );
+	
+	state.SetField ( -1, "SAMPLE_S8",			( u32 )ZLSample::SAMPLE_S8 );
+	state.SetField ( -1, "SAMPLE_U8",			( u32 )ZLSample::SAMPLE_U8 );
+	state.SetField ( -1, "SAMPLE_S16",			( u32 )ZLSample::SAMPLE_S16 );
+	state.SetField ( -1, "SAMPLE_U16",			( u32 )ZLSample::SAMPLE_U16 );
+	state.SetField ( -1, "SAMPLE_S32",			( u32 )ZLSample::SAMPLE_S32 );
+	state.SetField ( -1, "SAMPLE_U32",			( u32 )ZLSample::SAMPLE_U32 );
+	state.SetField ( -1, "SAMPLE_FLOAT",		( u32 )ZLSample::SAMPLE_FLOAT );
 }
 
 //----------------------------------------------------------------//
 void MOAIStream::RegisterLuaFuncs ( MOAILuaState& state ) {
 
 	luaL_Reg regTable [] = {
+		{ "collapse",			_collapse },
 		{ "compact",			_compact },
 		{ "flush",				_flush },
 		{ "getCursor",			_getCursor },
@@ -637,6 +708,7 @@ void MOAIStream::RegisterLuaFuncs ( MOAILuaState& state ) {
 		{ "readU8",				_readU8 },
 		{ "readU16",			_readU16 },
 		{ "readU32",			_readU32 },
+		{ "sample",				_sample },
 		{ "seek",				_seek },
 		{ "write",				_write },
 		{ "write8",				_write8 },

@@ -87,8 +87,8 @@ void MOAIGfxDeviceStateCache::BindVertexBuffer ( MOAIVertexBuffer* buffer ) {
 			this->mCurrentVtxBuffer->Unbind ();
 		}
 		
+		this->BindVertexFormat ();
 		this->mCurrentVtxBuffer = buffer;
-		this->mCurrentVtxFormat = 0;
 	
 		if ( buffer ) {
 			buffer->Bind ();
@@ -118,7 +118,7 @@ void MOAIGfxDeviceStateCache::BindVertexFormat ( MOAIVertexFormat* format ) {
 		
 			assert ( this->mCurrentVtxBuffer ); // must currently have a valid vertex buffer bound (to receive the vertex format)
 		
-			format->Bind ();
+			format->Bind ( this->mCurrentVtxBuffer->GetAddress ());
 		}
 	}
 }
@@ -343,6 +343,7 @@ void MOAIGfxDeviceStateCache::SetTexture ( MOAITextureBase* textureSet ) {
 
 	if ( this->mCurrentTexture != textureSet ) {
 
+		this->OnGfxStateWillChange ();
 		this->mCurrentTexture = textureSet;
 
 		u32 unitsEnabled = 0;
@@ -382,7 +383,13 @@ void MOAIGfxDeviceStateCache::SetTexture ( u32 textureUnit, MOAISingleTexture* t
 		this->mTextureUnits [ textureUnit ] = texture;
 		
 		if ( texture ) {
-			texture->Bind ();
+			if ( !texture->Bind ()) {
+			
+				MOAITexture* defaultTexture = this->GetDefaultTexture ();
+				if ( texture != defaultTexture ) {
+					this->SetTexture ( textureUnit, defaultTexture );
+				}
+			}
 		}
 	}
 }

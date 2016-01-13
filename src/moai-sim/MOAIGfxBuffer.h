@@ -24,7 +24,9 @@ public:
 //================================================================//
 // MOAIGfxBuffer
 //================================================================//
-// TODO: doxygen
+/**	@lua	MOAIGfxBuffer
+	@text	Base class for MOAIVertexBuffer and MOAIIndexBuffer.
+*/
 class MOAIGfxBuffer :
 	public MOAIGfxResource,
 	public MOAIStream,
@@ -32,6 +34,13 @@ class MOAIGfxBuffer :
 protected:
 	
 	friend class MOAIGfxDeviceBase;
+	friend class MOAIGfxDeviceStateCache;
+	
+	enum {
+		UPDATE_MODE_MAPBUFFER,
+		UPDATE_MODE_ORPHAN,
+		UPDATE_MODE_SUBDATA,
+	};
 	
 	ZLLeanArray < u32 >		mVBOs;
 	u32						mCurrentVBO;
@@ -41,9 +50,10 @@ protected:
 	MOAIGfxBufferLoader*	mLoader;
 	void*					mData;
 
+	bool					mUseVBOs;
+
 	//----------------------------------------------------------------//
 	static int				_copyFromStream			( lua_State* L );
-	static int				_load					( lua_State* L );
 	static int				_release				( lua_State* L );
 	static int				_reserve				( lua_State* L );
 	static int				_reserveVBOs			( lua_State* L );
@@ -63,16 +73,16 @@ protected:
 
 public:
 	
-	DECL_LUA_FACTORY ( MOAIGfxBuffer )
-	
 	GET ( const void*, Data, mData )
 	GET ( size_t, BufferCount, mVBOs.Size ())
-	
 	GET ( u32, Target, mTarget )
+	
+	IS ( UsingVBOs, mUseVBOs, true )
 	
 	//----------------------------------------------------------------//
 	void					Clear					();
 	void					CopyFromStream			( ZLStream& stream );
+	const void*				GetAddress				();
 	size_t					GetSize					();
 							MOAIGfxBuffer			();
 							~MOAIGfxBuffer			();
@@ -84,7 +94,6 @@ public:
 	void					ScheduleFlush			();
 	void					SerializeIn				( MOAILuaState& state, MOAIDeserializer& serializer );
 	void					SerializeOut			( MOAILuaState& state, MOAISerializer& serializer );
-	//void					Swap					(); // TODO: should be private; causes re-bind
 };
 
 #endif

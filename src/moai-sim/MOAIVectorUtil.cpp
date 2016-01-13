@@ -2,12 +2,14 @@
 // http://getmoai.com
 
 #include "pch.h"
-#include <moai-sim/MOAIGfxBuffer.h>
+#include <moai-sim/MOAIGeometryWriter.h>
+#include <moai-sim/MOAIIndexBuffer.h>
 #include <moai-sim/MOAIVectorUtil.h>
+#include <moai-sim/MOAIVertexBuffer.h>
+#include <moai-sim/MOAIVertexFormatMgr.h>
 #include <tesselator.h>
 #include <signal.h>
 #include <setjmp.h>
-#include <zl-vfs/assert.h>
 
 #define TESS_PRECISION 10000
 
@@ -24,10 +26,18 @@ void SafeTesselator::AddContour ( int size, const void* vertices, int stride, in
 }
 
 //----------------------------------------------------------------//
-u32 SafeTesselator::GetTriangles ( MOAIGfxBuffer& vtxBuffer, MOAIGfxBuffer& idxBuffer, u32 idxSizeInBytes ) {
+void SafeTesselator::AddPolygon ( const ZLPolygon2D& poly ) {
 
-	ZLMemStream idxStream;
-	ZLMemStream vtxStream;
+	tessAddContour ( this->mTess, 2, poly.GetVertices (), sizeof ( TESSreal ) * 2, poly.GetSize ());
+}
+
+//----------------------------------------------------------------//
+u32 SafeTesselator::GetTriangles ( MOAIVertexFormat& format, ZLStream& vtxStream, ZLStream& idxStream ) {
+
+	size_t idxCursor = idxStream.GetCursor ();
+	size_t vtxCursor = vtxStream.GetCursor ();
+	
+	size_t idxBase = ( vtxCursor / format.GetVertexSize ());
 
 	const int* elems = tessGetElements ( this->mTess );
 	const int nelems = tessGetElementCount ( this->mTess );
@@ -35,9 +45,9 @@ u32 SafeTesselator::GetTriangles ( MOAIGfxBuffer& vtxBuffer, MOAIGfxBuffer& idxB
 	for ( int i = 0; i < nelems; ++i ) {
 		const int* tri = &elems [ i * 3 ];
 		
-		idxStream.Write < u32 >( tri [ 0 ]);
-		idxStream.Write < u32 >( tri [ 1 ]);
-		idxStream.Write < u32 >( tri [ 2 ]);
+		idxStream.Write < u32 >( idxBase + tri [ 0 ]);
+		idxStream.Write < u32 >( idxBase + tri [ 1 ]);
+		idxStream.Write < u32 >( idxBase + tri [ 2 ]);
 	}
 
 	const float* verts = tessGetVertices ( this->mTess );
@@ -46,13 +56,25 @@ u32 SafeTesselator::GetTriangles ( MOAIGfxBuffer& vtxBuffer, MOAIGfxBuffer& idxB
 	for ( int i = 0; i < nverts; ++i ) {
 		const ZLVec2D& vert = (( const ZLVec2D* )verts )[ i ];
 		
-		vtxStream.Write < float >( vert.mX );
-		vtxStream.Write < float >( vert.mY );
-		vtxStream.Write < float >( 0.0f );
-		vtxStream.Write < u32 >( 0xffffffff );
+		format.WriteAhead ( vtxStream );
+		format.WriteCoord ( vtxStream, vert.mX, vert.mY, 0.0f, 1.0f );
+		format.WriteColor ( vtxStream, 0xffffffff );
+		format.SeekVertex ( vtxStream, vtxCursor, i + 1 );
 	}
+
+	// idx stream is 32-bits, so divide by 4 to get total indices written
+	return ( idxStream.GetLength () - idxCursor ) >> 2;
+}
+
+//----------------------------------------------------------------//
+u32 SafeTesselator::GetTriangles ( MOAIVertexFormat& format, MOAIVertexBuffer& vtxBuffer, MOAIIndexBuffer& idxBuffer, u32 idxSizeInBytes ) {
+
+	ZLMemStream idxStream;
+	ZLMemStream vtxStream;
+
+	this->GetTriangles ( format, vtxStream, idxStream );
 	
-	return MOAIVectorUtil::GetTriangles ( vtxStream, vtxBuffer, idxStream, idxBuffer, idxSizeInBytes );
+	return MOAIGeometryWriter::GetMesh ( format, vtxStream, idxStream, vtxBuffer, idxBuffer, idxSizeInBytes );
 }
 
 //------------------------------------------------------------------//
@@ -82,7 +104,7 @@ int SafeTesselator::Tesselate ( int windingRule, int elementType, int polySize, 
 	if ( err == 0 ) {
 		tessTesselate ( this->mTess, windingRule, elementType, polySize, vertexSize, normal ? normal : ( const TESSreal* )&sNormal );
 	}
-	zl_end_assert_env ();
+	zl_begin_assert_env ();
 	return err;
 }
 
@@ -110,13 +132,6 @@ void MOAIVectorUtil::ComputeLineJoins ( MOAIVectorLineJoin* joins, const ZLVec2D
 			joins [ i ].mVertex = verts [ top - i ];
 		}
 	}
-	
-//	for ( int i = 0; i < nVerts; ++i ) {
-//		
-//		ZLVec2D& vertex = joins [ i ].mVertex;
-//		vertex.mX = floorf ( vertex.mX * 1000 ) / 1000;
-//		vertex.mY = floorf ( vertex.mY * 1000 ) / 1000;
-//	}
 	
 	for ( int i = 0; i < nVerts; ++i ) {
 		
@@ -162,36 +177,6 @@ void MOAIVectorUtil::ComputeLineJoins ( MOAIVectorLineJoin* joins, const ZLVec2D
 		
 		joins [ i ].mJointNorm = n;
 	}
-}
-
-//----------------------------------------------------------------//
-u32 MOAIVectorUtil::GetTriangles ( ZLStream& vtxStream, MOAIGfxBuffer& vtxBuffer, ZLStream& idxStream, MOAIGfxBuffer& idxBuffer, u32 idxSizeInBytes ) {
-
-	return 0;
-
-//	idxStream.Seek ( 0, SEEK_SET );
-//	vtxStream.Seek ( 0, SEEK_SET );
-//
-//	vtxBuffer.Clear ();
-//	vtxBuffer.SetTarget ( ZGL_BUFFER_TARGET_ARRAY );
-//	vtxBuffer.Reserve ( vtxStream.GetLength ());
-//	vtxBuffer.WriteStream ( vtxStream );
-//	
-//	u32 totalIndices = ( u32 )( idxStream.GetLength () >> 2 ); // stream is 32-bits, so divide by 4 to get total indices
-//	
-//	idxBuffer.Clear ();
-//	idxBuffer.SetTarget ( ZGL_BUFFER_TARGET_ELEMENT_ARRAY );
-//	idxBuffer.Reserve ( totalIndices * idxSizeInBytes );
-//	
-//	if ( idxSizeInBytes == 4 ) {
-//		idxBuffer.WriteStream ( idxStream );
-//	}
-//	else {
-//		for ( u32 i = 0; i < totalIndices; ++i ) {
-//			idxBuffer.Write < u16 >(( u16 )idxStream.Read < u32 >( 0 ));
-//		}
-//	}
-//	return totalIndices;
 }
 
 //----------------------------------------------------------------//

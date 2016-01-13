@@ -13,6 +13,7 @@ class MOAITextStyleMap;
 //================================================================//
 // MOAITextStyleParser
 //================================================================//
+// parser state for producing a style map
 class MOAITextStyleParser {
 private:
 
@@ -69,11 +70,11 @@ private:
 	MOAITextStyleCache*		mStyleCache;
 	MOAITextStyleMap*		mStyleMap;
 
-	ZLLeanStack < MOAITextStyle*, 8 > mStyleStack;
-	ZLLeanStack < MOAITextStyle*, 8 > mActiveStyles;
+	ZLLeanStack < MOAITextStyleState*, 8 > mStyleStack;
+	ZLLeanStack < MOAITextStyleState*, 8 > mActiveStyles;
 
-	MOAITextStyle*	mDefaultStyle;
-	MOAITextStyle*	mCurrentStyle;
+	MOAITextStyleState*	mDefaultStyle;
+	MOAITextStyleState*	mCurrentStyle;
 
 	//----------------------------------------------------------------//
 	void			BuildStyleMap				( MOAITextStyleMap& styleMap, MOAITextStyleCache& styleCache, cc8* str );
@@ -83,7 +84,7 @@ private:
 	void			Parse						();
 	bool			ParseStyle					();
 	void			PopStyle					();
-	void			PushStyle					( MOAITextStyle* styleState );
+	void			PushStyle					( MOAITextStyleState* styleState );
 	void			UngetChar					();
 
 public:

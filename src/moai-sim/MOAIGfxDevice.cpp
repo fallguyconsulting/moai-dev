@@ -37,6 +37,20 @@ int MOAIGfxDevice::_getFrameBuffer ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
+/**	@lua	getMaxTextureSize
+	@text	Returns the maximum texture size supported by device
+ 
+	@out	number maxTextureSize
+*/
+int MOAIGfxDevice::_getMaxTextureSize ( lua_State* L ) {
+	
+	MOAILuaState state ( L );
+	state.Push ( MOAIGfxDevice::Get ().mMaxTextureSize );
+	
+	return 1;
+}
+
+//----------------------------------------------------------------//
 /**	@lua	getMaxTextureUnits
 	@text	Returns the total number of texture units available on the device.
 
@@ -68,7 +82,13 @@ int MOAIGfxDevice::_getViewSize ( lua_State* L  ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	setDefaultTexture
+	@text	Specify a fallback texture to use when textures are
+			unavailable (pending load, missing or in error state).
+	
+	@in		MOAITexture texture
+	@out	MOAITexture texture		Texture that was passed in or created.
+*/
 int MOAIGfxDevice::_setDefaultTexture ( lua_State* L ) {
 
 	MOAILuaState state ( L );
@@ -246,7 +266,7 @@ u32 MOAIGfxDevice::LogErrors () {
 	#ifndef MOAI_OS_NACL
 		if ( this->mHasContext ) {
 			for ( u32 error = zglGetError (); error != ZGL_ERROR_NONE; error = zglGetError (), ++count ) {
-				MOAILog ( 0, MOAILogMessages::MOAIGfxDevice_OpenGLError_S, zglGetErrorString ( error ));
+				MOAILogF ( 0, ZLLog::LOG_ERROR, MOAILogMessages::MOAIGfxDevice_OpenGLError_S, zglGetErrorString ( error ));
 			}
 		}
 	#endif
@@ -299,6 +319,7 @@ void MOAIGfxDevice::RegisterLuaClass ( MOAILuaState& state ) {
 	luaL_Reg regTable [] = {
 		{ "getFrameBuffer",				_getFrameBuffer },
 		{ "getListener",				&MOAIGlobalEventSource::_getListener < MOAIGfxDevice > },
+		{ "getMaxTextureSize",			_getMaxTextureSize },
 		{ "getMaxTextureUnits",			_getMaxTextureUnits },
 		{ "getViewSize",				_getViewSize },
 		{ "setDefaultTexture",			_setDefaultTexture },
@@ -316,7 +337,7 @@ void MOAIGfxDevice::ReportTextureAlloc ( cc8* name, size_t size ) {
 
 	this->mTextureMemoryUsage += size;
 	float mb = ( float )this->mTextureMemoryUsage / 1024.0f / 1024.0f;
-	MOAILog ( 0, MOAILogMessages::MOAITexture_MemoryUse_SDFS, "+", size, mb, name );
+	MOAILogF ( 0, ZLLog::LOG_STATUS, MOAILogMessages::MOAITexture_MemoryUse_SDFS, "+", size, mb, name );
 }
 
 //----------------------------------------------------------------//
@@ -324,7 +345,7 @@ void MOAIGfxDevice::ReportTextureFree ( cc8* name, size_t size ) {
 
 	this->mTextureMemoryUsage -= size;
 	float mb = ( float )this->mTextureMemoryUsage / 1024.0f / 1024.0f;
-	MOAILog ( 0, MOAILogMessages::MOAITexture_MemoryUse_SDFS, "-", size, mb, name );
+	MOAILogF ( 0, ZLLog::LOG_STATUS, MOAILogMessages::MOAITexture_MemoryUse_SDFS, "-", size, mb, name );
 }
 
 //----------------------------------------------------------------//
@@ -334,6 +355,8 @@ void MOAIGfxDevice::ResetDrawCount () {
 
 //----------------------------------------------------------------//
 void MOAIGfxDevice::ResetState () {
+
+	this->OnGfxStateWillChange ();
 
 	for ( u32 i = 0; i < TOTAL_VTX_TRANSFORMS; ++i ) {
 		this->mVertexTransforms [ i ].Ident ();

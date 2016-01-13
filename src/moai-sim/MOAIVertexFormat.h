@@ -45,7 +45,7 @@ public:
 
 	enum {
 	
-		// these are the known uses, supported by fixed function
+		// these are the known attribute types
 		ARRAY_COLOR,
 		ARRAY_NORMAL,
 		ARRAY_TEX_COORD,
@@ -84,7 +84,7 @@ private:
 	static int					_getVertexSize					( lua_State* L );
 	
 	//----------------------------------------------------------------//
-	void						Bind							() const;
+	void						Bind							( const void* buffer ) const;
 	static u32					GetComponentSize				( u32 size, u32 type );
 	static u32					GetIndexForUse					( u32 use );
 	static u32					GetUseForIndex					( u32 idx );

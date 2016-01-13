@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "63C4897045D0EF88507AD257AEF500CB53038CE0",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "63C4897045D0EF88507AD257AEF500CB53038CE0" : 0,
+    "7BB53B1506E6E1939A1DD83892672A1FDD165695" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "C4FE9C75-0543-4DE3-B558-ABA9029A68FF",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "63C4897045D0EF88507AD257AEF500CB53038CE0" : "moai-dev",
+    "7BB53B1506E6E1939A1DD83892672A1FDD165695" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "libmoai",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "xcode\/libmoai\/libmoai.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/moai\/moai-dev.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "63C4897045D0EF88507AD257AEF500CB53038CE0"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/fallguyconsulting\/casinowonders.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "7BB53B1506E6E1939A1DD83892672A1FDD165695"
+    }
+  ]
+}

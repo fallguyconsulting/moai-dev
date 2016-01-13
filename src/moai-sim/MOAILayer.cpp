@@ -36,7 +36,12 @@ int MOAILayer::_clear ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	getCamera
+	@text	Get the camera associated with the layer.
+	
+	@in		MOAILayer self
+	@out	MOAICamera camera
+*/
 int MOAILayer::_getCamera ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAILayer, "U" )
 	state.Push (( MOAILuaObject* )self->mCamera );
@@ -89,7 +94,18 @@ int MOAILayer::_getFitting ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	getFitting3D
+	@text	Find a position for the camera where all given locations or
+			props will be visible without changing the camera's orientation
+			(i.e. orient the camera first, then call this to derive the
+			correct position).
+	
+	@in		MOAILayer self
+	@in		table targets		A table of either props or locations. Locations are tables containing {x, y, z, r}.
+	@out	number x
+	@out	number y
+	@out	number z
+*/
 int MOAILayer::_getFitting3D ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAILayer, "UT" )
 
@@ -171,7 +187,18 @@ int	MOAILayer::_getPartition ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	getPropViewList
+	@text	Return a list of props gathered and sorted by layer.
+	
+	@in		MOAILayer self
+	@opt	number sortMode					Default is layer's current value.
+	@opt	boolean sortInViewSpace			Default is layer's current value.
+	@opt	number xSortScale				Default is layer's current value.
+	@opt	number ySortScale				Default is layer's current value.
+	@opt	number zSortScale				Default is layer's current value.
+	@opt	number pSortScale				Priority sort scale. Default is layer's current value.
+	@out	...								Gathered props.
+*/
 int	MOAILayer::_getPropViewList ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAILayer, "U" )
 	
@@ -265,7 +292,12 @@ int	MOAILayer::_getSortScale ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	getViewport
+	@text	Return the viewport currently associated with the layer.
+	
+	@in		MOAILayer self
+	@out	MOAILuaObject viewport
+*/
 int MOAILayer::_getViewport ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAILayer, "U" )
 	state.Push (( MOAILuaObject* )self->mViewport );
@@ -363,7 +395,14 @@ int MOAILayer::_setLODMode ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	setOverlayTable
+	@text	Set or clear the table of renderables to be drawn on
+			top of the layer.
+	
+	@in		MOAILayer self
+	@opt	table overlayTable
+	@out	nil
+*/
 int MOAILayer::_setOverlayTable ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAILayer, "U" )
 	
@@ -473,7 +512,14 @@ int	MOAILayer::_setSortScale ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	setOverlayTable
+	@text	Set or clear the table of renderables to be drawn behind
+			the layer.
+	
+	@in		MOAILayer self
+	@opt	table underlayTable
+	@out	nil
+*/
 int MOAILayer::_setUnderlayTable ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAILayer, "U" )
 	
@@ -573,6 +619,10 @@ int MOAILayer::_wndToWorld ( lua_State* L ) {
 int MOAILayer::_wndToWorldRay ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAILayer, "UNN" )
 
+	if ( self->mCamera ) {
+		self->mCamera->ForceUpdate ();
+	}
+
 	ZLMatrix4x4 wndToWorld = self->GetWndToWorldMtx ();
 
 	ZLVec4D loc;
@@ -635,7 +685,7 @@ int MOAILayer::_wndToWorldRay ( lua_State* L ) {
 		if ( self->mCamera  && ( self->mCamera->GetType () == MOAICamera::CAMERA_TYPE_3D )) {
 			const ZLAffine3D& localToWorldMtx = self->mCamera->GetLocalToWorldMtx ();
 			ZLVec3D zAxis = localToWorldMtx.GetZAxis ();
-			ns = -( d / zAxis.Dot ( norm ));
+			ns = -( d * zAxis.Dot ( norm ));
 		}
 		else {
 			ns = d;
@@ -692,6 +742,9 @@ void MOAILayer::AffirmPartition () {
 	}
 }
 
+#include <moai-sim/MOAIShaderMgr.h>
+#include <moai-sim/MOAIVertexFormatMgr.h>
+
 //----------------------------------------------------------------//
 void MOAILayer::Draw ( int subPrimID, float lod  ) {
 	UNUSED ( subPrimID );
@@ -710,7 +763,7 @@ void MOAILayer::Draw ( int subPrimID, float lod  ) {
 	renderMgr.SetCamera ( this->mCamera );
 	renderMgr.SetViewport ( this->mViewport );
 	
-	// TODO: I really don't think we need to do this here
+	// TODO: leaving this here for now (Moai SDK 1.7) but we need to move/remove it soon
 	gfxDevice.ResetState ();
 
 	// TODO:
@@ -775,7 +828,7 @@ void MOAILayer::Draw ( int subPrimID, float lod  ) {
 		gfxDevice.SetAmbientColor ( this->mColor );
 		
 		// figure out the correct LOD factor
-		float lod = this->mLODFactor * this->GetLinkedValue ( MOAILayerAttr::Pack ( ATTR_LOD ), 1.0f );;
+		float lod = this->mLODFactor * this->GetLinkedValue ( MOAILayerAttr::Pack ( ATTR_LOD ), 1.0f );
 		
 		this->DrawProps ( buffer, lod );
 		
@@ -1042,17 +1095,29 @@ void MOAILayer::RenderTable ( MOAILuaState& state, int idx ) {
 		
 		int valType = lua_type ( state, -1 );
 		
-		if ( valType == LUA_TUSERDATA ) {
-			MOAIRenderable* renderable = state.GetLuaObject < MOAIRenderable >( -1, false );
-			if ( renderable ) {
-				renderable->Render ();
+		switch ( valType ) {
+		
+			case LUA_TUSERDATA: {
+				MOAIRenderable* renderable = state.GetLuaObject < MOAIRenderable >( -1, false );
+				if ( renderable ) {
+					renderable->Render ();
+				}
+				break;
 			}
-		}
-		else if ( valType == LUA_TTABLE ) {
-			this->RenderTable ( state, -1 );
-		}
-		else {
-			n = 0;
+			case LUA_TTABLE:
+				this->RenderTable ( state, -1 );
+				break;
+			
+			case LUA_TFUNCTION: {
+			
+				MOAIDraw::Bind ();
+			
+				state.CopyToTop ( -1 );
+				state.DebugCall ( 0, 0 );
+				break;
+			}
+			default:
+				n = 0;
 		}
 		
 		lua_pop ( state, 1 );

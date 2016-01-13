@@ -34,6 +34,7 @@ private:
 	};
 	
 	//----------------------------------------------------------------//
+	static int		_collapse			( lua_State* L );
 	static int		_compact			( lua_State* L );
 	static int		_flush				( lua_State* L );
 	static int		_getCursor			( lua_State* L );
@@ -48,6 +49,7 @@ private:
 	static int		_readU8				( lua_State* L );
 	static int		_readU16			( lua_State* L );
 	static int		_readU32			( lua_State* L );
+	static int		_sample				( lua_State* L );
 	static int		_seek				( lua_State* L );
 	static int		_write				( lua_State* L );
 	static int		_write8				( lua_State* L );

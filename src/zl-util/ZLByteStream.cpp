@@ -98,6 +98,10 @@ void ZLByteStream::SetBuffer ( const void* buffer, size_t size, size_t length ) 
 int ZLByteStream::SetCursor ( long offset ) {
 
 	this->mCursor = offset > 0 ? offset : 0;
+	
+	if ( this->mCursor > this->mLength ) {
+		this->mCursor = this->mLength;
+	}
 	return 0;
 }
 
@@ -125,6 +129,13 @@ size_t ZLByteStream::WriteBytes ( const void* buffer, size_t size ) {
 		return size;
 	}
 	return 0;
+}
+
+//----------------------------------------------------------------//
+void ZLByteStream::WriteBytesUnsafe ( const void* buffer, size_t size ) {
+	
+	memcpy ( &(( u8* )this->mWriteBuffer )[ this->mCursor ], buffer, size );
+	this->mCursor += size;
 }
 
 //----------------------------------------------------------------//

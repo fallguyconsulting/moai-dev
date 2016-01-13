@@ -3,6 +3,9 @@
 
 #include "pch.h"
 #include <moai-util/MOAIFileSystem.h>
+#include <zl-vfs/ZLVfsFileSystem.h>
+#include <zl-vfs/ZLVfsVirtualPath.h>
+#include <zl-vfs/ZLVfsZipArchive.h>
 
 // TODO: these are getting reintroduced somewhere; find them and kill them
 
@@ -198,6 +201,45 @@ int MOAIFileSystem::_getWorkingDirectory ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
+/**	@lua	getVirtualPathInfo
+	@text	Given a virtual path, return the path to the archive and, if
+			the path is to a file, the offset to the file record within
+			the archive.
+ 
+	@in		string path					A virtual path.
+	@out	string pathToArchive		The archive to which the path is mapped.
+	@out	string localPath			The relative portion of the path.
+	@opt	string offsetToHeader		Offset to the file record header in the archive, or nil if not a file path.
+	@opt	number uncompressedSize		Uncompressed size of the file or nil if not a file path.
+	@opt	number compressedSize		Compressed size of the file or nil if not compressed or not a file path.
+*/
+int MOAIFileSystem::_getVirtualPathInfo ( lua_State* L ) {
+	MOAILuaState state ( L );
+
+	cc8* path = state.GetValue < cc8* >( 1, "" );
+
+	ZLVfsVirtualPathInfo info = ZLVfsFileSystem::Get ().GetVirtualPathInfo ( path );
+
+	int top = state.GetTop ();
+
+	if ( info.mIsVirtual ) {
+	
+		state.Push ( info.mPathToArchive.c_str ());
+		state.Push ( info.mLocalPath.c_str ());
+		
+		if ( info.mIsFile ) {
+			state.Push (( u32 )info.mOffsetToHeader );
+			state.Push (( u32 )info.mUncompressedSize );
+			
+			if ( info.mIsCompressed ) {
+				state.Push (( u32 )info.mCompressedSize );
+			}
+		}
+	}
+	return state.GetTop () - top;
+}
+
+//----------------------------------------------------------------//
 /**	@lua	listDirectories
 	@text	Lists the sub-directories contained in a directory.
  
@@ -277,7 +319,12 @@ int MOAIFileSystem::_listFiles ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	loadFile
+	@text	Open and read the entirity of a file into a string.
+
+	@in		string filename
+	@out	string contents		Returns empty string if file length is 0. Returns nil is no such file.
+*/
 int MOAIFileSystem::_loadFile ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIFileSystem, "S" )
 
@@ -327,7 +374,7 @@ int MOAIFileSystem::_mountVirtualDirectory ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+// TODO: deprecate
 int MOAIFileSystem::_pathFromRef ( lua_State* L ) {
 	MOAILuaState state ( L );
 
@@ -337,7 +384,7 @@ int MOAIFileSystem::_pathFromRef ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+// TODO: deprecate
 int MOAIFileSystem::_pathToRef ( lua_State* L ) {
 	MOAILuaState state ( L );
 
@@ -367,7 +414,13 @@ int MOAIFileSystem::_rename ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	saveFile
+	@text	Create or overwrite a file to contain the contents of a given string.
+
+	@in		string filename
+	@opt	string contents
+	@out	nil
+*/
 int MOAIFileSystem::_saveFile ( lua_State* L ) {
 	MOAI_LUA_SETUP_SINGLE ( MOAIFileSystem, "S" )
 
@@ -387,7 +440,7 @@ int MOAIFileSystem::_saveFile ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+// TODO: deprecate
 int MOAIFileSystem::_setPathRef ( lua_State* L ) {
 	MOAILuaState state ( L );
 
@@ -417,7 +470,17 @@ int MOAIFileSystem::_setWorkingDirectory ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	stripPKZipTimestamps
+	@text	Strip the timestamp from a pkzip file. Useful in systems
+			where periodically generated pkzip files are compared against
+			each other using hashes. Once timestamps are stripeed, two
+			pkzip files with the same contents should produce identical
+			hashes.
+
+	@in		string infilename
+	@in		string outfilename
+	@out	boolean success
+*/
 int MOAIFileSystem::_stripPKZipTimestamps ( lua_State* L ) {
 	MOAILuaState state ( L );
 
@@ -447,6 +510,7 @@ void MOAIFileSystem::RegisterLuaClass ( MOAILuaState& state ) {
 		{ "getAbsoluteDirectoryPath",	_getAbsoluteDirectoryPath },
 		{ "getRelativePath",			_getRelativePath },
 		{ "getWorkingDirectory",		_getWorkingDirectory },
+		{ "getVirtualPathInfo",			_getVirtualPathInfo },
 		{ "listDirectories",			_listDirectories },
 		{ "listFiles",					_listFiles },
 		{ "loadFile",					_loadFile },

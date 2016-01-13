@@ -18,7 +18,12 @@
 //================================================================//
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	getCache
+	@text	Returns glyph cache.
+	
+	@in		MOAIFont self
+	@out	MOAILuaObject cache
+*/
 int MOAIFont::_getCache ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIFont, "U" )
 	state.Push (( MOAILuaObject* )self->mCache );
@@ -89,7 +94,12 @@ int MOAIFont::_getImage ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	getCache
+	@text	Returns font reader.
+	
+	@in		MOAIFont self
+	@out	MOAILuaObject reader
+*/
 int MOAIFont::_getReader ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIFont, "U" )
 	state.Push (( MOAILuaObject* )self->mReader );
@@ -268,7 +278,14 @@ int MOAIFont::_setDefaultSize ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	setFilter
+	@text	Sets the filtering mode for glyph textures.
+	
+	@in		MOAIFont self
+	@opt	number minFilter
+	@out	number magFilter
+	@out	MOAILuaObject cache
+*/
 int MOAIFont::_setFilter ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIFont, "U" )
 	
@@ -346,7 +363,14 @@ int MOAIFont::_setReader ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	setShader
+	@text	Set the preferred shader for the font. (May be overridden by
+			a prop.)
+
+	@in		MOAIFont self
+	@in		MOAIShader shader
+	@out	MOAIShader shader
+*/
 int MOAIFont::_setShader ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIFont, "U" )
 
@@ -535,8 +559,10 @@ MOAISingleTexture* MOAIFont::GetGlyphTexture ( MOAIGlyph& glyph ) {
 //----------------------------------------------------------------//
 void MOAIFont::Init ( cc8* filename ) {
 
-	if ( ZLFileSys::CheckFileExists ( filename )) {
-		this->mFilename = ZLFileSys::GetAbsoluteFilePath ( filename );
+	this->mFilename = ZLFileSys::GetAbsoluteFilePath ( filename );
+
+	if ( !ZLFileSys::CheckFileExists ( filename )) {
+		ZLLog_Warning ( "WARNING: font file %s does not exist\n", filename );
 	}
 }
 
@@ -585,6 +611,9 @@ MOAIFont::~MOAIFont () {
 // update them to match target - i.e. metrics or metrics and bitmap
 void MOAIFont::ProcessGlyphs () {
 
+	// this function gets called frequenty to process any pending glyphs on the fly.
+	// for that reason, it should exit quickly if there are no pending glyphs.
+
 	MOAIFontReader* fontReader = this->mReader;
 	if ( !fontReader ) return;
 
@@ -605,11 +634,15 @@ void MOAIFont::ProcessGlyphs () {
 		// if no pending glyphs, move on to the next deck
 		if ( !pendingGlyphs ) continue;
 		
+		// only open the font here as we know that we have pending glyphs to process
 		if ( !fontIsOpen ) {
 			fontIsOpen = this->mReader->OpenFontFile ( this->mFilename ) == MOAIFontReader::OK;
 		}
 
-		if ( !fontIsOpen ) return;		
+		if ( !fontIsOpen ) {
+			ZLLog_Error ( "ERROR: unable to open font file %s for reading glyphs.\n", this->mFilename.c_str ());
+			return;
+		}
 		
 		// get the face metrics
 		fontReader->SelectFace ( glyphSet.mSize );

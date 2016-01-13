@@ -49,7 +49,13 @@ int MOAISingleTexture::_release ( lua_State* L ) {
 }
 
 //----------------------------------------------------------------//
-// TODO: doxygen
+/**	@lua	setDebugName
+	@text	Set a name for the texture to use during memory logging.
+	
+	@in		MOAISingleTexture self
+	@in		string debugName
+	@out	nil
+*/
 int MOAISingleTexture::_setDebugName ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAISingleTexture, "U" )
 
@@ -148,7 +154,7 @@ bool MOAISingleTexture::CreateTextureFromImage ( MOAIImage& srcImage ) {
 
 	// warn if not a power of two
 	if ( !image.IsPow2 ()) {
-		MOAILog ( 0, MOAILogMessages::MOAITexture_NonPowerOfTwo_SDD, ( cc8* )this->mDebugName, this->mWidth, this->mHeight );
+		MOAILogF ( 0, ZLLog::LOG_WARNING, MOAILogMessages::MOAITexture_NonPowerOfTwo_SDD, ( cc8* )this->mDebugName, this->mWidth, this->mHeight );
 	}
 
 	// GL_ALPHA
@@ -263,7 +269,7 @@ u32 MOAISingleTexture::GetHeight () {
 MOAISingleTexture* MOAISingleTexture::GetTextureForUnit ( u32 unit ) {
 	UNUSED ( unit );
 
-	assert ( unit == 1 );
+	assert ( unit == 0 );
 
 	return this;
 }

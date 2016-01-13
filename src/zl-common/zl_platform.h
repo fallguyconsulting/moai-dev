@@ -1,6 +1,10 @@
 #ifndef ZL_PLATFORM_H
 #define	ZL_PLATFORM_H
 
+#if !(( defined ( DEBUG ) && defined ( _DEBUG )) || defined ( NDEBUG ))
+	#error DEBUG and _DEBUG or NDEBUG *must* be defined!
+#endif
+
 //http://predef.sourceforge.net/preos.html#sec19
 #if defined( __APPLE__ ) && defined( __MACH__ )
 
@@ -23,14 +27,15 @@
 #elif defined( _WIN32 )
 	#define MOAI_OS_WINDOWS
 
-#elif defined( __linux )
+#elif defined( EMSCRIPTEN )
+	#define MOAI_OS_HTML
 
+#elif defined( __linux )
 	#ifdef ANDROID
 		#define MOAI_OS_ANDROID
 	#else
 		#define MOAI_OS_LINUX
 	#endif
-
 #else
 	#define MOAI_OS_UNKNOWN
 #endif
@@ -53,7 +58,9 @@
 
 
 #ifdef MOAI_OS_WINDOWS
+
 	#ifdef MOAI_COMPILER_MSVC
+		#pragma warning ( disable : 4250 )
 		#pragma warning ( disable : 4290 )
 		#pragma warning ( disable : 4995 )
 		#pragma warning ( disable : 4996 )
@@ -113,6 +120,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <errno.h>
+#include <float.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdio.h>

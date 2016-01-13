@@ -318,8 +318,7 @@ void MOAITextDesignParser::BuildLayout () {
 		}
 		else {
 			MOAIGlyph* glyph = this->mDeck->GetGlyph ( c );
-			if ( !glyph ) continue;
-			if ( glyph->mCode == MOAIGlyph::NULL_CODE_ID ) continue;
+			if (( !glyph ) || ( glyph->mCode == MOAIGlyph::NULL_CODE_ID ) || ( glyph->mPageID == MOAIGlyph::NULL_PAGE_ID )) continue;
 			
 			// apply kerning
 			if ( this->mPrevGlyph ) {
@@ -358,7 +357,10 @@ void MOAITextDesignParser::BuildLayout () {
 				
 				// if we're the first token in a line *and* have overrun, don't attempt to split the token - just
 				// discard the extra glyphs. later on this will be the place to implement fancy/custom token splitting.
-				if ( !discard ) {
+				if ( discard ) {
+					this->mOverrun = true;
+				}
+				else {
 					// push the sprite
 					this->mLayout->PushSprite ( this->mPrevIdx, *glyph, *this->mStyle, this->mPenX, 0.0f, xScale, yScale );
 					this->mTokenRect = tokenRect;
@@ -444,6 +446,7 @@ void MOAITextDesignParser::BuildLayout ( MOAITextLayout& layout, MOAITextStyleCa
 	this->mPrevGlyph = 0;
 	
 	this->mMore = true;
+	this->mOverrun = false;
 	
 	this->mBaseLine = layout.mLines.GetTop ();
 	
@@ -505,7 +508,7 @@ u32 MOAITextDesignParser::NextChar () {
 	
 		if ( newSpan ) {
 		
-			MOAITextStyle* defaultStyle = this->mStyleCache->GetStyle ();
+			MOAITextStyleState* defaultStyle = this->mStyleCache->GetStyle ();
 			MOAIFont* defaultFont = defaultStyle ? defaultStyle->mFont : 0;
 		
 			if ( this->mIdx < this->mStyleSpan->mBase ) {
@@ -535,6 +538,12 @@ u32 MOAITextDesignParser::NextChar () {
 		return c;
 	}
 	return 0;
+}
+
+//----------------------------------------------------------------//
+bool MOAITextDesignParser::Overrun () {
+
+	return this->mMore || this->mOverrun;
 }
 
 //----------------------------------------------------------------//
