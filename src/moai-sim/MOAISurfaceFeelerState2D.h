@@ -14,7 +14,7 @@ private:
 	
 	friend class MOAISurfaceFeeler2D;
 	
-	static const u32	MAX_STEPS = 8;
+	static const u32		MAX_STEPS = 8;
 	
 	MOAISurfaceSampler2D	mSurfaceBuffer;
 	

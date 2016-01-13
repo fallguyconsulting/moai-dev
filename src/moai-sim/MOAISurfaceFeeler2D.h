@@ -73,7 +73,7 @@ public:
 	//----------------------------------------------------------------//
 	void			Draw					( int subPrimID );
 	u32				GetPropBounds			( ZLBox& bounds );
-					MOAISurfaceFeeler2D	();
+					MOAISurfaceFeeler2D		();
 					~MOAISurfaceFeeler2D	();
 	void			OnDepNodeUpdate			();
 	void			RegisterLuaClass		( MOAILuaState& state );

@@ -84,33 +84,33 @@ u32 MOAISurfaceFeeler2D::AffirmInterfaceMask ( MOAIPartition& partition ) {
 void MOAISurfaceFeeler2D::Draw ( int subPrimID ) {
 	UNUSED ( subPrimID );
 
-//	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
-//	
-//	MOAIDraw& draw = MOAIDraw::Get ();
-//	UNUSED ( draw ); // mystery warning in vs2008
-//	
-//	draw.Bind ();
-//	
-//	gfxDevice.SetVertexTransform ( MOAIGfxDevice::VTX_WORLD_TRANSFORM, this->GetUnitToWorldMtx ());
-//	gfxDevice.SetVertexMtxMode ( MOAIGfxDevice::VTX_STAGE_MODEL, MOAIGfxDevice::VTX_STAGE_PROJ );
-//	
-//	gfxDevice.SetPenColor ( 0x7f7f7f7f );
-//	gfxDevice.SetPenWidth ( 1.0f );
-//	ZLAffine3D worldToUnit = this->GetWorldToUnitMtx ();
-//	ZLRect debugBoundsRect = this->mDebugBounds.GetRect ( ZLBox::PLANE_XY );
-//	worldToUnit.Transform ( debugBoundsRect );
-//	draw.DrawRectOutline ( debugBoundsRect );
-//	
-//	gfxDevice.SetPenColor ( 0x7f7f7f7f );
-//	gfxDevice.SetPenWidth ( 2.0f );
-//	draw.DrawEllipseOutline ( 0.0f, 0.0f, 1.0f, 1.0f, 32 );
-//	draw.DrawLine ( 0.0f, 0.0f, 0.0f, -( 1.0f + ( this->mSkirt / this->mVRad )));
-//	
-//	gfxDevice.SetPenColor ( 0xffffffff );
-//	gfxDevice.SetPenWidth ( 2.0f );
-//	draw.DrawEllipseArcOutline ( 0.0f, 0.0f, 1.0f, 1.0f, this->mCeilAngle, 180.0f - this->mFloorAngle, 8 );
-//	draw.DrawEllipseArcOutline ( 0.0f, 0.0f, 1.0f, 1.0f, 180.0f + this->mFloorAngle, 360.0f - this->mCeilAngle, 8 );
-//	
+	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
+	
+	MOAIDraw& draw = MOAIDraw::Get ();
+	UNUSED ( draw ); // mystery warning in vs2008
+	
+	draw.Bind ();
+	
+	gfxDevice.SetVertexTransform ( MOAIGfxDevice::VTX_WORLD_TRANSFORM, this->GetUnitToWorldMtx ());
+	gfxDevice.SetVertexMtxMode ( MOAIGfxDevice::VTX_STAGE_MODEL, MOAIGfxDevice::VTX_STAGE_PROJ );
+	
+	gfxDevice.SetPenColor ( 0x7f7f7f7f );
+	gfxDevice.SetPenWidth ( 1.0f );
+	ZLAffine3D worldToUnit = this->GetWorldToUnitMtx ();
+	ZLRect debugBoundsRect = this->mDebugBounds.GetRect ( ZLBox::PLANE_XY );
+	worldToUnit.Transform ( debugBoundsRect );
+	draw.DrawRectOutline ( debugBoundsRect );
+	
+	gfxDevice.SetPenColor ( 0x7f7f7f7f );
+	gfxDevice.SetPenWidth ( 2.0f );
+	draw.DrawEllipseOutline ( 0.0f, 0.0f, 1.0f, 1.0f, 32 );
+	draw.DrawLine ( 0.0f, 0.0f, 0.0f, -( 1.0f + ( this->mSkirt / this->mVRad )));
+	
+	gfxDevice.SetPenColor ( 0xffffffff );
+	gfxDevice.SetPenWidth ( 2.0f );
+	draw.DrawEllipseArcOutline ( 0.0f, 0.0f, 1.0f, 1.0f, this->mCeilAngle, 180.0f - this->mFloorAngle, 8 );
+	draw.DrawEllipseArcOutline ( 0.0f, 0.0f, 1.0f, 1.0f, 180.0f + this->mFloorAngle, 360.0f - this->mCeilAngle, 8 );
+	
 //	MOAISurfaceBuffer2D buffer;
 //	this->GatherSurfacesForBounds ( buffer, this->mDebugBounds );
 //	u32 top = buffer.GetTop ();

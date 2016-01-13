@@ -5,6 +5,22 @@
 #define	MOAIRENDERABLE_H
 
 //================================================================//
+// MOAIBaseDrawable
+//================================================================//
+class MOAIBaseDrawable {
+public:
+
+	static const int NO_SUBPRIM_ID = 0xffffffff;
+
+	//----------------------------------------------------------------//
+	virtual void		Draw						();
+	virtual void		Draw						( int subPrimID, float lod ) = 0;
+	virtual void		DrawDebug					( int subPrimID, float lod );
+						MOAIBaseDrawable			();
+	virtual				~MOAIBaseDrawable			();
+};
+
+//================================================================//
 // MOAIRenderable
 //================================================================//
 /**	@lua	MOAIRenderable
