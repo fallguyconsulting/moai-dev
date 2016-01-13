@@ -1,48 +1,48 @@
 // Copyright (c) 2010-2011 Zipline Games, Inc. All Rights Reserved.
 // http://getmoai.com
 
-#ifndef	MOAIPLATFORMERFSM2D_H
-#define	MOAIPLATFORMERFSM2D_H
+#ifndef	MOAISURFACEFEELERSTATE2D_H
+#define	MOAISURFACEFEELERSTATE2D_H
 
 #include <moai-sim/MOAISurfaceSampler2D.h>
 
 //================================================================//
-// MOAIPlatformerFsm2D
+// MOAISurfaceFeelerState2D
 //================================================================//
-class MOAIPlatformerFsm2D {
+class MOAISurfaceFeelerState2D {
 private:
 	
-	friend class MOAIPlatformerBody2D;
+	friend class MOAISurfaceFeeler2D;
 	
 	static const u32	MAX_STEPS = 8;
 	
 	MOAISurfaceSampler2D	mSurfaceBuffer;
 	
-	float				mFloorCos;
-	float				mCeilCos;
+	float					mFloorCos;
+	float					mCeilCos;
 	
-	u32					mState;
+	u32						mState;
 	
-	ZLVec2D				mMove;					// current move (original vector)
+	ZLVec2D					mMove;					// current move (original vector)
 	
-	bool				mWallToLeft;
-	bool				mWallToRight;
+	bool					mWallToLeft;
+	bool					mWallToRight;
 	
-	float				mLeftWallDepth;
-	float				mRightWallDepth;
+	float					mLeftWallDepth;
+	float					mRightWallDepth;
 	
-	float				mMoveDistOnFloor;		// distance to move along floor (scalar on floor tangent)
-	float				mShoveDistOnFloor;		// distance to shove along floor (scalar on floor tangent)
-	float				mShoveDistInAir;
+	float					mMoveDistOnFloor;		// distance to move along floor (scalar on floor tangent)
+	float					mShoveDistOnFloor;		// distance to shove along floor (scalar on floor tangent)
+	float					mShoveDistInAir;
 	
-	ZLVec2D				mLoc;
-	ZLVec2D				mUp;
+	ZLVec2D					mLoc;
+	ZLVec2D					mUp;
 	
 	const MOAISurface2D*	mFloor;				// may be nil even if state is ON_FLOOR ('ghost' platform from snap)
 	ZLVec2D					mFloorNorm;
 	ZLVec2D					mFloorTangent;
 	
-	ZLRect				mBounds;
+	ZLRect					mBounds;
 	
 	enum {
 		STATE_DONE,
@@ -60,8 +60,8 @@ private:
 	void		DoMoveOnFloor					();
 	void		DoWallSnapInAir					();
 	void		DoVerticalSnap					();
-	ZLBox		GetWorldBoundsForMove			( MOAIPlatformerBody2D& body );
-	void		Move							( MOAIPlatformerBody2D& body );
+	ZLBox		GetWorldBoundsForMove			( MOAISurfaceFeeler2D& body );
+	void		Move							( MOAISurfaceFeeler2D& body );
 	void		SetCeiling						( const MOAISurface2D& ceiling );
 	void		SetFloor						( const MOAISurface2D& floor );
 };

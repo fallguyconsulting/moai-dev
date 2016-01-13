@@ -3,8 +3,8 @@
 
 #include "pch.h"
 #include <moai-sim/MOAIGfxDevice.h>
-#include <moai-sim/MOAIPlatformerBody2D.h>
-#include <moai-sim/MOAIPlatformerFsm2D.h>
+#include <moai-sim/MOAISurfaceFeeler2D.h>
+#include <moai-sim/MOAISurfaceFeelerState2D.h>
 #include <moai-sim/MOAISurfaceSampler2D.h>
 
 #ifndef FP_EPSILON
@@ -26,11 +26,11 @@
 #define FLOOR_PAD_LENGTH 0.0001f
 
 //================================================================//
-// MOAIPlatformerFsm2D
+// MOAISurfaceFeelerState2D
 //================================================================//
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::CalculateWallDepthInAir () {
+void MOAISurfaceFeelerState2D::CalculateWallDepthInAir () {
 	
 	this->mWallToLeft = false;
 	this->mWallToRight = false;
@@ -81,7 +81,7 @@ void MOAIPlatformerFsm2D::CalculateWallDepthInAir () {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::CalculateWallDepthOnFloor () {
+void MOAISurfaceFeelerState2D::CalculateWallDepthOnFloor () {
 
 //	this->mWallToLeft = false;
 //	this->mWallToRight = false;
@@ -127,7 +127,7 @@ void MOAIPlatformerFsm2D::CalculateWallDepthOnFloor () {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::CalculateWallShoveInAir () {
+void MOAISurfaceFeelerState2D::CalculateWallShoveInAir () {
 	
 	this->mShoveDistInAir = 0.0f;
 	
@@ -148,7 +148,7 @@ void MOAIPlatformerFsm2D::CalculateWallShoveInAir () {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::CalculateWallShoveOnFloor () {
+void MOAISurfaceFeelerState2D::CalculateWallShoveOnFloor () {
 	
 	this->mShoveDistOnFloor = 0.0f;
 	
@@ -208,7 +208,7 @@ void MOAIPlatformerFsm2D::CalculateWallShoveOnFloor () {
 }
 
 //----------------------------------------------------------------//
-ZLVec2D MOAIPlatformerFsm2D::ClipMoveToBounds ( const ZLVec2D& loc, ZLVec2D move ) {
+ZLVec2D MOAISurfaceFeelerState2D::ClipMoveToBounds ( const ZLVec2D& loc, ZLVec2D move ) {
 	
 //	float t;
 //	if (( ZLSect::RayToRect ( loc, move, this->mBounds, t ) == ZLSect::SECT_HIT ) && ( t < 1.0f )) {
@@ -218,7 +218,7 @@ ZLVec2D MOAIPlatformerFsm2D::ClipMoveToBounds ( const ZLVec2D& loc, ZLVec2D move
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::DoMoveInAir () {
+void MOAISurfaceFeelerState2D::DoMoveInAir () {
 
 //	ZLVec2D move = this->ClipMoveToBounds ( this->mLoc, this->mMove );
 //
@@ -330,7 +330,7 @@ void MOAIPlatformerFsm2D::DoMoveInAir () {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::DoMoveOnFloor () {
+void MOAISurfaceFeelerState2D::DoMoveOnFloor () {
 	
 //	this->CalculateWallDepthOnFloor ();
 //	this->CalculateWallShoveOnFloor ();
@@ -496,7 +496,7 @@ void MOAIPlatformerFsm2D::DoMoveOnFloor () {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::DoWallSnapInAir () {
+void MOAISurfaceFeelerState2D::DoWallSnapInAir () {
 
 	this->CalculateWallDepthInAir ();
 	this->CalculateWallShoveInAir ();
@@ -507,7 +507,7 @@ void MOAIPlatformerFsm2D::DoWallSnapInAir () {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::DoVerticalSnap () {
+void MOAISurfaceFeelerState2D::DoVerticalSnap () {
 
 //	float bestFloorSnapDist = -1.001f;
 //	const MOAISurface2D* bestFloor = 0;
@@ -576,7 +576,7 @@ void MOAIPlatformerFsm2D::DoVerticalSnap () {
 }
 
 //----------------------------------------------------------------//
-ZLBox MOAIPlatformerFsm2D::GetWorldBoundsForMove ( MOAIPlatformerBody2D& body ) {
+ZLBox MOAISurfaceFeelerState2D::GetWorldBoundsForMove ( MOAISurfaceFeeler2D& body ) {
 
 	ZLBox worldBounds;
 	body.GetPropBounds ( worldBounds );
@@ -599,7 +599,7 @@ ZLBox MOAIPlatformerFsm2D::GetWorldBoundsForMove ( MOAIPlatformerBody2D& body ) 
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::Move ( MOAIPlatformerBody2D& body ) {
+void MOAISurfaceFeelerState2D::Move ( MOAISurfaceFeeler2D& body ) {
 
 	// gather surfaces for move
 	// if snap - process snap
@@ -635,7 +635,7 @@ void MOAIPlatformerFsm2D::Move ( MOAIPlatformerBody2D& body ) {
 //	this->mState = this->mFloor ? STATE_ON_FLOOR : STATE_IN_AIR;
 //
 //	if (( this->mState == STATE_ON_FLOOR ) && ( this->mMove.Dot ( this->mFloorNorm ) > 0.0001f )) {
-//		if (( body.mDetachMode == MOAIPlatformerBody2D::DETACH_ON_ANY ) || (( body.mDetachMode == MOAIPlatformerBody2D::DETACH_ON_UP ) && ( this->mMove.Dot ( this->mUp ) > 0.0001f ))) {
+//		if (( body.mDetachMode == MOAISurfaceFeeler2D::DETACH_ON_ANY ) || (( body.mDetachMode == MOAISurfaceFeeler2D::DETACH_ON_UP ) && ( this->mMove.Dot ( this->mUp ) > 0.0001f ))) {
 //			this->mState = STATE_IN_AIR;
 //		}
 //	}
@@ -668,7 +668,7 @@ void MOAIPlatformerFsm2D::Move ( MOAIPlatformerBody2D& body ) {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::SetCeiling ( const MOAISurface2D& ceiling ) {
+void MOAISurfaceFeelerState2D::SetCeiling ( const MOAISurface2D& ceiling ) {
 
 	if ((( this->mMove.mX < 0.0f ) && ( ceiling.mNorm.mX > 0.0f )) || (( this->mMove.mX > 0.0f ) && ( ceiling.mNorm.mX < 0.0f ))) {
 		this->mMove.mX = 0.0f;
@@ -677,7 +677,7 @@ void MOAIPlatformerFsm2D::SetCeiling ( const MOAISurface2D& ceiling ) {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerFsm2D::SetFloor ( const MOAISurface2D& floor ) {
+void MOAISurfaceFeelerState2D::SetFloor ( const MOAISurface2D& floor ) {
 	
 	//printf ( "FLOOR: %p\n", &floor );
 	

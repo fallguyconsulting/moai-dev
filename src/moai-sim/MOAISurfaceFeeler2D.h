@@ -1,8 +1,8 @@
 // Copyright (c) 2010-2011 Zipline Games, Inc. All Rights Reserved.
 // http://getmoai.com
 
-#ifndef	MOAIPLATFORMERBODY2D_H
-#define	MOAIPLATFORMERBODY2D_H
+#ifndef	MOAISURFACEFEELER2D_H
+#define	MOAISURFACEFEELER2D_H
 
 #include <moai-sim/MOAIProp.h>
 
@@ -11,14 +11,14 @@ class MOAIPartition;
 class MOAIGrid;
 
 //================================================================//
-// MOAIPlatformerBody2D
+// MOAISurfaceFeeler2D
 //================================================================//
 // TODO: doxygen
-class MOAIPlatformerBody2D :
+class MOAISurfaceFeeler2D :
 	public virtual MOAIProp {
 private:
 	
-	friend class MOAIPlatformerFsm2D;
+	friend class MOAISurfaceFeelerState2D;
 	
 	float		mFloorAngle;
 	float		mFloorCos;
@@ -66,15 +66,15 @@ public:
 		DETACH_ON_ANY,
 	};
 	
-	DECL_LUA_FACTORY ( MOAIPlatformerBody2D )
+	DECL_LUA_FACTORY ( MOAISurfaceFeeler2D )
 	
 	IS ( Standing, mIsStanding, true )
 	
 	//----------------------------------------------------------------//
 	void			Draw					( int subPrimID );
 	u32				GetPropBounds			( ZLBox& bounds );
-					MOAIPlatformerBody2D	();
-					~MOAIPlatformerBody2D	();
+					MOAISurfaceFeeler2D	();
+					~MOAISurfaceFeeler2D	();
 	void			OnDepNodeUpdate			();
 	void			RegisterLuaClass		( MOAILuaState& state );
 	void			RegisterLuaFuncs		( MOAILuaState& state );

@@ -6,8 +6,8 @@
 #include <moai-sim/MOAIGfxDevice.h>
 #include <moai-sim/MOAIPartition.h>
 #include <moai-sim/MOAIPartitionResultMgr.h>
-#include <moai-sim/MOAIPlatformerBody2D.h>
-#include <moai-sim/MOAIPlatformerFsm2D.h>
+#include <moai-sim/MOAISurfaceFeeler2D.h>
+#include <moai-sim/MOAISurfaceFeelerState2D.h>
 #include <moai-sim/MOAISurfaceSampler2D.h>
 
 //================================================================//
@@ -16,8 +16,8 @@
 
 //----------------------------------------------------------------//
 // TODO: doxygen
-int MOAIPlatformerBody2D::_getStatus ( lua_State* L ) {
-	MOAI_LUA_SETUP ( MOAIPlatformerBody2D, "U" );
+int MOAISurfaceFeeler2D::_getStatus ( lua_State* L ) {
+	MOAI_LUA_SETUP ( MOAISurfaceFeeler2D, "U" );
 
 	state.Push ( self->mSteps );
 	state.Push ( self->mCompleted );
@@ -26,8 +26,8 @@ int MOAIPlatformerBody2D::_getStatus ( lua_State* L ) {
 
 //----------------------------------------------------------------//
 // TODO: doxygen
-int MOAIPlatformerBody2D::_setCeilingAngle ( lua_State* L ) {
-	MOAI_LUA_SETUP ( MOAIPlatformerBody2D, "U" );
+int MOAISurfaceFeeler2D::_setCeilingAngle ( lua_State* L ) {
+	MOAI_LUA_SETUP ( MOAISurfaceFeeler2D, "U" );
 
 	float angle = state.GetValue < float >( 2, 0.0f );
 	self->SetCeilingAngle ( angle );
@@ -36,8 +36,8 @@ int MOAIPlatformerBody2D::_setCeilingAngle ( lua_State* L ) {
 }
 //----------------------------------------------------------------//
 // TODO: doxygen
-int MOAIPlatformerBody2D::_setEllipse ( lua_State* L ) {
-	MOAI_LUA_SETUP ( MOAIPlatformerBody2D, "U" );
+int MOAISurfaceFeeler2D::_setEllipse ( lua_State* L ) {
+	MOAI_LUA_SETUP ( MOAISurfaceFeeler2D, "U" );
 
 	self->mHRad = state.GetValue < float >( 2, 32.0f );
 	self->mVRad = state.GetValue < float >( 3, self->mHRad );
@@ -47,8 +47,8 @@ int MOAIPlatformerBody2D::_setEllipse ( lua_State* L ) {
 
 //----------------------------------------------------------------//
 // TODO: doxygen
-int MOAIPlatformerBody2D::_setFloorAngle ( lua_State* L ) {
-	MOAI_LUA_SETUP ( MOAIPlatformerBody2D, "U" );
+int MOAISurfaceFeeler2D::_setFloorAngle ( lua_State* L ) {
+	MOAI_LUA_SETUP ( MOAISurfaceFeeler2D, "U" );
 
 	float angle = state.GetValue < float >( 2, 0.0f );
 	self->SetFloorAngle ( angle );
@@ -58,8 +58,8 @@ int MOAIPlatformerBody2D::_setFloorAngle ( lua_State* L ) {
 
 //----------------------------------------------------------------//
 // TODO: doxygen
-int MOAIPlatformerBody2D::_setMove ( lua_State* L ) {
-	MOAI_LUA_SETUP ( MOAIPlatformerBody2D, "U" );
+int MOAISurfaceFeeler2D::_setMove ( lua_State* L ) {
+	MOAI_LUA_SETUP ( MOAISurfaceFeeler2D, "U" );
 	
 	self->mMove.mX = state.GetValue < float >( 2, self->mMove.mX );
 	self->mMove.mY = state.GetValue < float >( 3, self->mMove.mY );
@@ -71,17 +71,17 @@ int MOAIPlatformerBody2D::_setMove ( lua_State* L ) {
 }
 
 //================================================================//
-// MOAIPlatformerBody2D
+// MOAISurfaceFeeler2D
 //================================================================//
 
 //----------------------------------------------------------------//
-u32 MOAIPlatformerBody2D::AffirmInterfaceMask ( MOAIPartition& partition ) {
+u32 MOAISurfaceFeeler2D::AffirmInterfaceMask ( MOAIPartition& partition ) {
 	UNUSED ( partition );
 	return 0;
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::Draw ( int subPrimID ) {
+void MOAISurfaceFeeler2D::Draw ( int subPrimID ) {
 	UNUSED ( subPrimID );
 
 //	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
@@ -127,7 +127,7 @@ void MOAIPlatformerBody2D::Draw ( int subPrimID ) {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::GatherSurfacesForBounds ( MOAISurfaceSampler2D& buffer, const ZLBox& bounds ) {
+void MOAISurfaceFeeler2D::GatherSurfacesForBounds ( MOAISurfaceSampler2D& buffer, const ZLBox& bounds ) {
 
 //	MOAIPartition* partition = this->GetPartition ();
 //	if ( !partition ) return;
@@ -149,7 +149,7 @@ void MOAIPlatformerBody2D::GatherSurfacesForBounds ( MOAISurfaceSampler2D& buffe
 }
 
 //----------------------------------------------------------------//
-//u32 MOAIPlatformerBody2D::GetLocalFrame ( ZLRect& frame ) {
+//u32 MOAISurfaceFeeler2D::GetLocalFrame ( ZLRect& frame ) {
 //	
 //	frame.mXMin = -this->mHRad;
 //	frame.mYMin = -( this->mVRad + this->mSkirt );
@@ -160,7 +160,7 @@ void MOAIPlatformerBody2D::GatherSurfacesForBounds ( MOAISurfaceSampler2D& buffe
 //}
 
 //----------------------------------------------------------------//
-u32 MOAIPlatformerBody2D::GetPropBounds ( ZLBox& bounds ) {
+u32 MOAISurfaceFeeler2D::GetPropBounds ( ZLBox& bounds ) {
 
 	ZLRect rect;
 
@@ -174,7 +174,7 @@ u32 MOAIPlatformerBody2D::GetPropBounds ( ZLBox& bounds ) {
 }
 
 //----------------------------------------------------------------//
-ZLRect MOAIPlatformerBody2D::GetUnitRectForWorldBounds ( const ZLBox& bounds ) {
+ZLRect MOAISurfaceFeeler2D::GetUnitRectForWorldBounds ( const ZLBox& bounds ) {
 
 	ZLVec3D loc = this->GetWorldLoc ();
 	ZLRect rect = bounds.GetRect ( ZLBox::PLANE_XY );
@@ -184,7 +184,7 @@ ZLRect MOAIPlatformerBody2D::GetUnitRectForWorldBounds ( const ZLBox& bounds ) {
 }
 
 //----------------------------------------------------------------//
-ZLAffine3D MOAIPlatformerBody2D::GetUnitToWorldMtx () {
+ZLAffine3D MOAISurfaceFeeler2D::GetUnitToWorldMtx () {
 	
 	ZLAffine3D transform;
 	
@@ -199,7 +199,7 @@ ZLAffine3D MOAIPlatformerBody2D::GetUnitToWorldMtx () {
 }
 
 //----------------------------------------------------------------//
-ZLAffine3D MOAIPlatformerBody2D::GetWorldToUnitMtx () {
+ZLAffine3D MOAISurfaceFeeler2D::GetWorldToUnitMtx () {
 	
 	ZLAffine3D transform;
 	
@@ -214,7 +214,7 @@ ZLAffine3D MOAIPlatformerBody2D::GetWorldToUnitMtx () {
 }
 
 //----------------------------------------------------------------//
-MOAIPlatformerBody2D::MOAIPlatformerBody2D () :
+MOAISurfaceFeeler2D::MOAISurfaceFeeler2D () :
 	mMove ( 0.0f, 0.0f ),
 	mHRad ( 32.0f ),
 	mVRad ( 32.0f ),
@@ -235,26 +235,26 @@ MOAIPlatformerBody2D::MOAIPlatformerBody2D () :
 }
 
 //----------------------------------------------------------------//
-MOAIPlatformerBody2D::~MOAIPlatformerBody2D () {
+MOAISurfaceFeeler2D::~MOAISurfaceFeeler2D () {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::OnDepNodeUpdate () {
+void MOAISurfaceFeeler2D::OnDepNodeUpdate () {
 	
-//	MOAIPlatformerFsm2D fsm;
+//	MOAISurfaceFeelerState2D fsm;
 //	this->BuildTransforms (); // not sure about this here
 //	fsm.Move ( *this );
 //	MOAIProp::OnDepNodeUpdate ();
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::RegisterLuaClass ( MOAILuaState& state ) {
+void MOAISurfaceFeeler2D::RegisterLuaClass ( MOAILuaState& state ) {
 	
 	MOAIProp::RegisterLuaClass ( state );
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::RegisterLuaFuncs ( MOAILuaState& state ) {
+void MOAISurfaceFeeler2D::RegisterLuaFuncs ( MOAILuaState& state ) {
 	
 	MOAIProp::RegisterLuaFuncs ( state );
 	
@@ -271,21 +271,21 @@ void MOAIPlatformerBody2D::RegisterLuaFuncs ( MOAILuaState& state ) {
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::SetCeilingAngle ( float angle ) {
+void MOAISurfaceFeeler2D::SetCeilingAngle ( float angle ) {
 
 	this->mCeilAngle = angle;
 	this->mCeilCos = -Cos ( angle * ( float )D2R );
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::SetFloorAngle ( float angle ) {
+void MOAISurfaceFeeler2D::SetFloorAngle ( float angle ) {
 
 	this->mFloorAngle = angle;
 	this->mFloorCos = Cos ( angle * ( float )D2R );
 }
 
 //----------------------------------------------------------------//
-void MOAIPlatformerBody2D::SetMove ( float x, float y ) {
+void MOAISurfaceFeeler2D::SetMove ( float x, float y ) {
 
 	this->mMove.Init ( x, y );
 	this->ScheduleUpdate ();

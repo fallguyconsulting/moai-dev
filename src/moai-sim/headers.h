@@ -122,6 +122,8 @@
 #include <moai-sim/MOAIStandardDeck.h>
 #include <moai-sim/MOAIStretchPatch2D.h>
 #include <moai-sim/MOAISurfaceDeck2D.h>
+#include <moai-sim/MOAISurfaceFeeler2D.h>
+#include <moai-sim/MOAISurfaceFeelerState2D.h>
 #include <moai-sim/MOAITexture.h>
 #include <moai-sim/MOAITextureBase.h>
 #include <moai-sim/MOAITileDeck2D.h>

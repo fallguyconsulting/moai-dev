@@ -1125,14 +1125,14 @@
 		CD1BF8AA1940564E0066877A /* MOAIBox2DMotorJoint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1BF8A71940564E0066877A /* MOAIBox2DMotorJoint.cpp */; };
 		CD1BF8AB1940564E0066877A /* MOAIBox2DMotorJoint.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1BF8A81940564E0066877A /* MOAIBox2DMotorJoint.h */; };
 		CD1BF8AC1940564E0066877A /* MOAIBox2DMotorJoint.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1BF8A81940564E0066877A /* MOAIBox2DMotorJoint.h */; };
-		CD1C31AD1C46237900596725 /* MOAIPlatformerBody2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A51C4622B800596725 /* MOAIPlatformerBody2D.cpp */; };
-		CD1C31AE1C46237900596725 /* MOAIPlatformerBody2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A61C4622B800596725 /* MOAIPlatformerBody2D.h */; };
-		CD1C31AF1C46237900596725 /* MOAIPlatformerFsm2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A71C4622B800596725 /* MOAIPlatformerFsm2D.cpp */; };
-		CD1C31B01C46237900596725 /* MOAIPlatformerFsm2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A81C4622B800596725 /* MOAIPlatformerFsm2D.h */; };
-		CD1C31B11C46237D00596725 /* MOAIPlatformerBody2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A51C4622B800596725 /* MOAIPlatformerBody2D.cpp */; };
-		CD1C31B21C46237D00596725 /* MOAIPlatformerBody2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A61C4622B800596725 /* MOAIPlatformerBody2D.h */; };
-		CD1C31B31C46237D00596725 /* MOAIPlatformerFsm2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A71C4622B800596725 /* MOAIPlatformerFsm2D.cpp */; };
-		CD1C31B41C46237D00596725 /* MOAIPlatformerFsm2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A81C4622B800596725 /* MOAIPlatformerFsm2D.h */; };
+		CD1C31AD1C46237900596725 /* MOAISurfaceFeeler2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A51C4622B800596725 /* MOAISurfaceFeeler2D.cpp */; };
+		CD1C31AE1C46237900596725 /* MOAISurfaceFeeler2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A61C4622B800596725 /* MOAISurfaceFeeler2D.h */; };
+		CD1C31AF1C46237900596725 /* MOAISurfaceFeelerState2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A71C4622B800596725 /* MOAISurfaceFeelerState2D.cpp */; };
+		CD1C31B01C46237900596725 /* MOAISurfaceFeelerState2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A81C4622B800596725 /* MOAISurfaceFeelerState2D.h */; };
+		CD1C31B11C46237D00596725 /* MOAISurfaceFeeler2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A51C4622B800596725 /* MOAISurfaceFeeler2D.cpp */; };
+		CD1C31B21C46237D00596725 /* MOAISurfaceFeeler2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A61C4622B800596725 /* MOAISurfaceFeeler2D.h */; };
+		CD1C31B31C46237D00596725 /* MOAISurfaceFeelerState2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CD1C31A71C4622B800596725 /* MOAISurfaceFeelerState2D.cpp */; };
+		CD1C31B41C46237D00596725 /* MOAISurfaceFeelerState2D.h in Headers */ = {isa = PBXBuildFile; fileRef = CD1C31A81C4622B800596725 /* MOAISurfaceFeelerState2D.h */; };
 		CD23665C180A5454006A7236 /* host.h in Headers */ = {isa = PBXBuildFile; fileRef = CD52323F1808ADDA00B81720 /* host.h */; };
 		CD23665D180A5454006A7236 /* host.mm in Sources */ = {isa = PBXBuildFile; fileRef = CD5232401808ADDA00B81720 /* host.mm */; };
 		CD23665E180A5454006A7236 /* MOAIChartBoostIOS.h in Headers */ = {isa = PBXBuildFile; fileRef = CD5232411808ADDA00B81720 /* MOAIChartBoostIOS.h */; };
@@ -6215,10 +6215,10 @@
 		CD1BF8A21940512A0066877A /* lcrypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lcrypto.h; path = "../../3rdparty/luacrypto-0.3.2/src/lcrypto.h"; sourceTree = "<group>"; };
 		CD1BF8A71940564E0066877A /* MOAIBox2DMotorJoint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAIBox2DMotorJoint.cpp; sourceTree = "<group>"; };
 		CD1BF8A81940564E0066877A /* MOAIBox2DMotorJoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAIBox2DMotorJoint.h; sourceTree = "<group>"; };
-		CD1C31A51C4622B800596725 /* MOAIPlatformerBody2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAIPlatformerBody2D.cpp; sourceTree = "<group>"; };
-		CD1C31A61C4622B800596725 /* MOAIPlatformerBody2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAIPlatformerBody2D.h; sourceTree = "<group>"; };
-		CD1C31A71C4622B800596725 /* MOAIPlatformerFsm2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAIPlatformerFsm2D.cpp; sourceTree = "<group>"; };
-		CD1C31A81C4622B800596725 /* MOAIPlatformerFsm2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAIPlatformerFsm2D.h; sourceTree = "<group>"; };
+		CD1C31A51C4622B800596725 /* MOAISurfaceFeeler2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAISurfaceFeeler2D.cpp; sourceTree = "<group>"; };
+		CD1C31A61C4622B800596725 /* MOAISurfaceFeeler2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAISurfaceFeeler2D.h; sourceTree = "<group>"; };
+		CD1C31A71C4622B800596725 /* MOAISurfaceFeelerState2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MOAISurfaceFeelerState2D.cpp; sourceTree = "<group>"; };
+		CD1C31A81C4622B800596725 /* MOAISurfaceFeelerState2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MOAISurfaceFeelerState2D.h; sourceTree = "<group>"; };
 		CD218F8413A7FD6E008337E7 /* ls_sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = ls_sqlite3.c; path = "../../3rdparty/luasql-2.2.0/src/ls_sqlite3.c"; sourceTree = SOURCE_ROOT; };
 		CD218F8513A7FD6E008337E7 /* luasql.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = luasql.c; path = "../../3rdparty/luasql-2.2.0/src/luasql.c"; sourceTree = SOURCE_ROOT; };
 		CD218F8613A7FD6E008337E7 /* luasql.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = luasql.h; path = "../../3rdparty/luasql-2.2.0/src/luasql.h"; sourceTree = SOURCE_ROOT; };
@@ -9756,10 +9756,10 @@
 		CD1C31A41C46229100596725 /* feeler */ = {
 			isa = PBXGroup;
 			children = (
-				CD1C31A51C4622B800596725 /* MOAIPlatformerBody2D.cpp */,
-				CD1C31A61C4622B800596725 /* MOAIPlatformerBody2D.h */,
-				CD1C31A71C4622B800596725 /* MOAIPlatformerFsm2D.cpp */,
-				CD1C31A81C4622B800596725 /* MOAIPlatformerFsm2D.h */,
+				CD1C31A51C4622B800596725 /* MOAISurfaceFeeler2D.cpp */,
+				CD1C31A61C4622B800596725 /* MOAISurfaceFeeler2D.h */,
+				CD1C31A71C4622B800596725 /* MOAISurfaceFeelerState2D.cpp */,
+				CD1C31A81C4622B800596725 /* MOAISurfaceFeelerState2D.h */,
 			);
 			name = feeler;
 			sourceTree = "<group>";
@@ -12943,7 +12943,7 @@
 				CD4C3E51180A63BB00C02381 /* MOAIInputDevice.h in Headers */,
 				CD4C3ECA180A63BB00C02381 /* MOAITextBundle.h in Headers */,
 				CD4C3E45180A63BB00C02381 /* MOAIGridPathGraph.h in Headers */,
-				CD1C31B41C46237D00596725 /* MOAIPlatformerFsm2D.h in Headers */,
+				CD1C31B41C46237D00596725 /* MOAISurfaceFeelerState2D.h in Headers */,
 				CD4C3EFB180A63BB00C02381 /* MOAIWheelSensor.h in Headers */,
 				CD4C3E7E180A63BB00C02381 /* MOAIParticleTimedEmitter.h in Headers */,
 				CD73A60A188F0AEC00DFACDB /* MOAIGraphicsProp.h in Headers */,
@@ -12981,7 +12981,7 @@
 				CD4C3E4B180A63BB00C02381 /* MOAIImage.h in Headers */,
 				CD4C3ECE180A63BB00C02381 /* MOAITextStyle.h in Headers */,
 				CD4C3E1C180A63BB00C02381 /* MOAIEaseDriver.h in Headers */,
-				CD1C31B21C46237D00596725 /* MOAIPlatformerBody2D.h in Headers */,
+				CD1C31B21C46237D00596725 /* MOAISurfaceFeeler2D.h in Headers */,
 				CD4C3DF3180A63BB00C02381 /* MOAIAnimCurveBase.h in Headers */,
 				CD4C3EB1180A63BB00C02381 /* MOAIScissorRect.h in Headers */,
 				CD6ECF6E1A6E247C004813FF /* MOAIMatrix.h in Headers */,
@@ -13102,7 +13102,7 @@
 				CD4C402C180A63C200C02381 /* MOAIBitmapFontReader.h in Headers */,
 				CD4C408B180A63C200C02381 /* MOAILayer.h in Headers */,
 				CD4C40E3180A63C200C02381 /* MOAIScissorRect.h in Headers */,
-				CD1C31B01C46237900596725 /* MOAIPlatformerFsm2D.h in Headers */,
+				CD1C31B01C46237900596725 /* MOAISurfaceFeelerState2D.h in Headers */,
 				CD4C403E180A63C200C02381 /* MOAICollisionShape.h in Headers */,
 				CD4C40B8180A63C200C02381 /* MOAIPartitionResultBuffer.h in Headers */,
 				CD4C410A180A63C200C02381 /* MOAITileFlags.h in Headers */,
@@ -13154,7 +13154,7 @@
 				CD4C412F180A63C200C02381 /* pch.h in Headers */,
 				CD4C40A4180A63C200C02381 /* MOAIParticleForce.h in Headers */,
 				CD1AEB491A0F785C005512C8 /* MOAIGfxResourceMgr.h in Headers */,
-				CD1C31AE1C46237900596725 /* MOAIPlatformerBody2D.h in Headers */,
+				CD1C31AE1C46237900596725 /* MOAISurfaceFeeler2D.h in Headers */,
 				CD4C4123180A63C200C02381 /* MOAIVectorStyle.h in Headers */,
 				CD4C4129180A63C200C02381 /* MOAIVertexFormatMgr.h in Headers */,
 				CD4C403C180A63C200C02381 /* MOAICameraFitter2D.h in Headers */,
@@ -16618,7 +16618,7 @@
 				CD4C3DF4180A63BB00C02381 /* MOAIAnimCurveQuat.cpp in Sources */,
 				CD4C3EB0180A63BB00C02381 /* MOAIScissorRect.cpp in Sources */,
 				CD4C3E9D180A63BB00C02381 /* MOAIProfilerReport.cpp in Sources */,
-				CD1C31B31C46237D00596725 /* MOAIPlatformerFsm2D.cpp in Sources */,
+				CD1C31B31C46237D00596725 /* MOAISurfaceFeelerState2D.cpp in Sources */,
 				CD4C3DEE180A63BB00C02381 /* MOAIAnim.cpp in Sources */,
 				CD4C3EC3180A63BB00C02381 /* MOAISurfaceDeck2D.cpp in Sources */,
 				CD4C3E36180A63BB00C02381 /* MOAIGlyph.cpp in Sources */,
@@ -16635,7 +16635,7 @@
 				CD67B4661B264FF0004298CF /* MOAIStandardDeck.cpp in Sources */,
 				CD4C3DE6180A63BB00C02381 /* host.cpp in Sources */,
 				CD4C3EAA180A63BB00C02381 /* MOAIQuadBrush.cpp in Sources */,
-				CD1C31B11C46237D00596725 /* MOAIPlatformerBody2D.cpp in Sources */,
+				CD1C31B11C46237D00596725 /* MOAISurfaceFeeler2D.cpp in Sources */,
 				CD4C3E56180A63BB00C02381 /* MOAIKeyboardSensor.cpp in Sources */,
 				CDC5203A18A17EB700BCC12F /* MOAIShaderUniform.cpp in Sources */,
 				CD4C3E97180A63BB00C02381 /* MOAIProfilerContext.cpp in Sources */,
@@ -16793,7 +16793,7 @@
 				CD4C4060180A63C200C02381 /* MOAIGfxQuad2D.cpp in Sources */,
 				CD4C40D5180A63C200C02381 /* MOAIProfilerScope.cpp in Sources */,
 				CD4C4096180A63C200C02381 /* MOAIMultiTexture.cpp in Sources */,
-				CD1C31AF1C46237900596725 /* MOAIPlatformerFsm2D.cpp in Sources */,
+				CD1C31AF1C46237900596725 /* MOAISurfaceFeelerState2D.cpp in Sources */,
 				CDEFD577181ECB3E0058D772 /* MOAIVectorEllipse.cpp in Sources */,
 				CD4C405E180A63C200C02381 /* MOAIGfxDevice.cpp in Sources */,
 				CD4C40BF180A63C200C02381 /* MOAIPathTerrainDeck.cpp in Sources */,
@@ -16810,7 +16810,7 @@
 				CD4C4128180A63C200C02381 /* MOAIVertexFormatMgr.cpp in Sources */,
 				CD4C40DC180A63C200C02381 /* MOAIQuadBrush.cpp in Sources */,
 				CD4C4088180A63C200C02381 /* MOAIKeyboardSensor.cpp in Sources */,
-				CD1C31AD1C46237900596725 /* MOAIPlatformerBody2D.cpp in Sources */,
+				CD1C31AD1C46237900596725 /* MOAISurfaceFeeler2D.cpp in Sources */,
 				CDEFD57B181ECB3E0058D772 /* MOAIVectorRect.cpp in Sources */,
 				CD4C4074180A63C200C02381 /* MOAIGridDeck2D.cpp in Sources */,
 				CDF941B71B2FAEB1009D7787 /* MOAIVertexBuffer.cpp in Sources */,
