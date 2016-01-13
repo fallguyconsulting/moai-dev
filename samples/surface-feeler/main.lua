@@ -16,4 +16,4 @@ MOAISim.pushRenderPass ( layer )
 
 feeler = MOAISurfaceFeeler2D.new ()
 feeler:setEllipse ( 64 )
-layer:feeler ( prop )
+layer:insertProp ( feeler )

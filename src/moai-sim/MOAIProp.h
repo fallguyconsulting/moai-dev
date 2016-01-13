@@ -4,10 +4,10 @@
 #ifndef	MOAIPROP_H
 #define	MOAIPROP_H
 
+#include <moai-sim/MOAIBaseDrawable.h>
 #include <moai-sim/MOAIBlendMode.h>
 #include <moai-sim/MOAIColor.h>
 #include <moai-sim/MOAIProp.h>
-#include <moai-sim/MOAIRenderable.h>
 #include <moai-sim/MOAITransform.h>
 #include <moai-core/MOAILuaSharedPtr.h>
 

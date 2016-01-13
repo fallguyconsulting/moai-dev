@@ -14,6 +14,7 @@
 #include <moai-sim/MOAIAnimCurveQuat.h>
 #include <moai-sim/MOAIAnimCurveVec.h>
 #include <moai-sim/MOAIAttrOp.h>
+#include <moai-sim/MOAIBaseDrawable.h>
 #include <moai-sim/MOAIBlendMode.h>
 #include <moai-sim/MOAIBoundsDeck.h>
 //#include <moai-sim/MOAIBspBuilder2D.h>
@@ -105,7 +106,6 @@
 #include <moai-sim/MOAIProp.h>
 #include <moai-sim/MOAIQuadBrush.h>
 #include <moai-sim/MOAIRegion.h>
-#include <moai-sim/MOAIRenderable.h>
 #include <moai-sim/MOAIRenderMgr.h>
 #include <moai-sim/MOAIScissorRect.h>
 #include <moai-sim/MOAIScriptDeck.h>

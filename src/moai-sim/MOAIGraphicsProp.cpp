@@ -518,7 +518,7 @@ MOAIMaterialBatch* MOAIGraphicsProp::AffirmMaterialBatch () {
 //----------------------------------------------------------------//
 u32 MOAIGraphicsProp::AffirmInterfaceMask ( MOAIPartition& partition ) {
 
-	return partition.AffirmInterfaceMask < MOAIGraphicsProp >();
+	return partition.AffirmInterfaceMask < MOAIBaseDrawable >();
 }
 
 //----------------------------------------------------------------//
@@ -885,7 +885,7 @@ MOAIGraphicsProp::MOAIGraphicsProp () :
 	RTTI_BEGIN
 		RTTI_EXTEND ( MOAIProp )
 		RTTI_EXTEND ( MOAIColor )
-		RTTI_EXTEND ( MOAIRenderable )
+		RTTI_EXTEND ( MOAIBaseDrawable )
 	RTTI_END
 	
 	this->mFlags = DEFAULT_FLAGS;
@@ -1005,17 +1005,11 @@ void MOAIGraphicsProp::RegisterLuaFuncs ( MOAILuaState& state ) {
 }
 
 //----------------------------------------------------------------//
-void MOAIGraphicsProp::Render () {
-
-	this->Draw ( MOAIGraphicsProp::NO_SUBPRIM_ID, 0.0f );
-}
-
-//----------------------------------------------------------------//
 void MOAIGraphicsProp::SerializeIn ( MOAILuaState& state, MOAIDeserializer& serializer ) {
 	
 	MOAIProp::SerializeIn ( state, serializer );
 	MOAIColor::SerializeIn ( state, serializer );
-	MOAIRenderable::SerializeIn ( state, serializer );
+	MOAIBaseDrawable::SerializeIn ( state, serializer );
 }
 
 //----------------------------------------------------------------//
@@ -1023,7 +1017,7 @@ void MOAIGraphicsProp::SerializeOut ( MOAILuaState& state, MOAISerializer& seria
 	
 	MOAIProp::SerializeOut ( state, serializer );
 	MOAIColor::SerializeOut ( state, serializer );
-	MOAIRenderable::SerializeOut ( state, serializer );
+	MOAIBaseDrawable::SerializeOut ( state, serializer );
 }
 
 //----------------------------------------------------------------//

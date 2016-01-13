@@ -15,7 +15,8 @@ class MOAIGrid;
 //================================================================//
 // TODO: doxygen
 class MOAISurfaceFeeler2D :
-	public virtual MOAIProp {
+	public MOAIProp,
+	public MOAIBaseDrawable {
 private:
 	
 	friend class MOAISurfaceFeelerState2D;
@@ -71,11 +72,11 @@ public:
 	IS ( Standing, mIsStanding, true )
 	
 	//----------------------------------------------------------------//
-	void			Draw					( int subPrimID );
-	u32				GetPropBounds			( ZLBox& bounds );
+	void			Draw					( int subPrimID, float lod );
 					MOAISurfaceFeeler2D		();
 					~MOAISurfaceFeeler2D	();
 	void			OnDepNodeUpdate			();
+	u32				OnGetModelBounds		( ZLBox& bounds );
 	void			RegisterLuaClass		( MOAILuaState& state );
 	void			RegisterLuaFuncs		( MOAILuaState& state );
 	void			SetMove					( float x, float y );

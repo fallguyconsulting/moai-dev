@@ -5,8 +5,8 @@
 #define	MOAICOLLISIONWORLD_H
 
 #include <moai-sim/MOAIAction.h>
+#include <moai-sim/MOAIBaseDrawable.h>
 #include <moai-sim/MOAICollisionProp.h>
-#include <moai-sim/MOAIRenderable.h>
 
 class MOAICollisionProp;
 class MOAIOverlapInfo;
@@ -18,7 +18,7 @@ class MOAIProp;
 //================================================================//
 class MOAICollisionWorld :
 	public MOAIAction,
-	public MOAIRenderable {
+	public MOAIBaseDrawable {
 private:
 
 	friend class MOAICollisionProp;
@@ -50,6 +50,7 @@ private:
 	void				ClearOverlaps			( MOAICollisionProp& prop );
 	void				DoCallback				( u32 eventID, MOAICollisionProp& prop0, MOAICollisionProp& prop1 );
 	void				DoCallback				( u32 eventID, MOAICollisionProp& prop0, MOAICollisionProp& prop1, const MOAIOverlapInfo& overlapInfo );
+	void				Draw					( int subPrimID, float lod );
 	void				DrawCollisionProp		( MOAICollisionProp& prop );
 	void				InsertProp				( MOAICollisionProp& prop );
 	bool				IsDone					();
@@ -62,7 +63,6 @@ private:
 	void				OnUpdate				( double step );
 	void				ProcessOverlaps			();
 	void				PruneOverlaps			( MOAICollisionProp& prop );
-	void				Render					();
 	void				RemoveProp				( MOAICollisionProp& prop );
 
 public:

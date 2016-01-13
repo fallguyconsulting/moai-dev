@@ -76,13 +76,14 @@ int MOAISurfaceFeeler2D::_setMove ( lua_State* L ) {
 
 //----------------------------------------------------------------//
 u32 MOAISurfaceFeeler2D::AffirmInterfaceMask ( MOAIPartition& partition ) {
-	UNUSED ( partition );
-	return 0;
+
+	return partition.AffirmInterfaceMask < MOAIBaseDrawable >();
 }
 
 //----------------------------------------------------------------//
-void MOAISurfaceFeeler2D::Draw ( int subPrimID ) {
+void MOAISurfaceFeeler2D::Draw ( int subPrimID, float lod ) {
 	UNUSED ( subPrimID );
+	UNUSED ( lod );
 
 	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
 	
@@ -94,12 +95,12 @@ void MOAISurfaceFeeler2D::Draw ( int subPrimID ) {
 	gfxDevice.SetVertexTransform ( MOAIGfxDevice::VTX_WORLD_TRANSFORM, this->GetUnitToWorldMtx ());
 	gfxDevice.SetVertexMtxMode ( MOAIGfxDevice::VTX_STAGE_MODEL, MOAIGfxDevice::VTX_STAGE_PROJ );
 	
-	gfxDevice.SetPenColor ( 0x7f7f7f7f );
-	gfxDevice.SetPenWidth ( 1.0f );
-	ZLAffine3D worldToUnit = this->GetWorldToUnitMtx ();
-	ZLRect debugBoundsRect = this->mDebugBounds.GetRect ( ZLBox::PLANE_XY );
-	worldToUnit.Transform ( debugBoundsRect );
-	draw.DrawRectOutline ( debugBoundsRect );
+//	gfxDevice.SetPenColor ( 0x7f7f7f7f );
+//	gfxDevice.SetPenWidth ( 1.0f );
+//	ZLAffine3D worldToUnit = this->GetWorldToUnitMtx ();
+//	ZLRect debugBoundsRect = this->mDebugBounds.GetRect ( ZLBox::PLANE_XY );
+//	worldToUnit.Transform ( debugBoundsRect );
+//	draw.DrawRectOutline ( debugBoundsRect );
 	
 	gfxDevice.SetPenColor ( 0x7f7f7f7f );
 	gfxDevice.SetPenWidth ( 2.0f );
@@ -160,20 +161,6 @@ void MOAISurfaceFeeler2D::GatherSurfacesForBounds ( MOAISurfaceSampler2D& buffer
 //}
 
 //----------------------------------------------------------------//
-u32 MOAISurfaceFeeler2D::GetPropBounds ( ZLBox& bounds ) {
-
-	ZLRect rect;
-
-	rect.mXMin = -this->mHRad;
-	rect.mYMin = -( this->mVRad + this->mSkirt );
-	rect.mXMax = this->mHRad;
-	rect.mYMax = this->mVRad;
-	
-	bounds.Init ( rect.mXMin, rect.mYMax, rect.mXMax, rect.mYMin, 0.0f, 0.0f );
-	return BOUNDS_OK;
-}
-
-//----------------------------------------------------------------//
 ZLRect MOAISurfaceFeeler2D::GetUnitRectForWorldBounds ( const ZLBox& bounds ) {
 
 	ZLVec3D loc = this->GetWorldLoc ();
@@ -226,6 +213,7 @@ MOAISurfaceFeeler2D::MOAISurfaceFeeler2D () :
 	
 	RTTI_BEGIN
 		RTTI_EXTEND ( MOAIProp )
+		RTTI_EXTEND ( MOAIBaseDrawable )
 	RTTI_END
 	
 	//this->SetQueryMask ( MOAIContentLibrary2D::CAN_DRAW_DEBUG );
@@ -244,7 +232,21 @@ void MOAISurfaceFeeler2D::OnDepNodeUpdate () {
 //	MOAISurfaceFeelerState2D fsm;
 //	this->BuildTransforms (); // not sure about this here
 //	fsm.Move ( *this );
-//	MOAIProp::OnDepNodeUpdate ();
+	MOAIProp::OnDepNodeUpdate ();
+}
+
+//----------------------------------------------------------------//
+u32 MOAISurfaceFeeler2D::OnGetModelBounds ( ZLBox& bounds ) {
+
+	ZLRect rect;
+
+	rect.mXMin = -this->mHRad;
+	rect.mYMin = -( this->mVRad + this->mSkirt );
+	rect.mXMax = this->mHRad;
+	rect.mYMax = this->mVRad;
+	
+	bounds.Init ( rect.mXMin, rect.mYMax, rect.mXMax, rect.mYMin, 0.0f, 0.0f );
+	return BOUNDS_OK;
 }
 
 //----------------------------------------------------------------//

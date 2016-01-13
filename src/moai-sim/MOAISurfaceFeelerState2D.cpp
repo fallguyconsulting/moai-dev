@@ -578,8 +578,7 @@ void MOAISurfaceFeelerState2D::DoVerticalSnap () {
 //----------------------------------------------------------------//
 ZLBox MOAISurfaceFeelerState2D::GetWorldBoundsForMove ( MOAISurfaceFeeler2D& body ) {
 
-	ZLBox worldBounds;
-	body.GetPropBounds ( worldBounds );
+	ZLBox worldBounds = body.GetBounds ();
 	worldBounds.Bless ();
 
 //	ZLBox offsetBounds = worldBounds;

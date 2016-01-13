@@ -7,20 +7,20 @@
 #include <moai-sim/MOAIEaseDriver.h>
 #include <moai-sim/MOAIImage.h>
 
+class MOAIBaseDrawable;
 class MOAICamera;
 class MOAIFrameBuffer;
 class MOAIProp;
-class MOAIRenderable;
 class MOAIViewport;
 
 //================================================================//
 // MOAIRenderMgr
 //================================================================//
 /**	@lua	MOAIRenderMgr
-	@text	MOAIRenderMgr is responsible for drawing a list of MOAIRenderable
-			objects. MOAIRenderable is the base class for any object that can be
+	@text	MOAIRenderMgr is responsible for drawing a list of MOAIBaseDrawable
+			objects. MOAIBaseDrawable is the base class for any object that can be
 			drawn. This includes MOAIProp and MOAILayer. To use MOAIRenderMgr
-			pass a table of MOAIRenderable objects to MOAIRenderMgr.setRenderTable ().
+			pass a table of MOAIBaseDrawable objects to MOAIRenderMgr.setRenderTable ().
 			The table will usually be a stack of MOAILayer objects. The contents of
 			the table will be rendered the next time a frame is drawn. Note that the
 			table must be an array starting with index 1. Objects will be rendered
@@ -43,7 +43,7 @@ private:
 	MOAIViewport*		mViewport;
 	MOAICamera*			mCamera;
 	MOAIFrameBuffer*	mFrameBuffer;
-	MOAIRenderable*		mRenderable;
+	MOAIBaseDrawable*		mRenderable;
 	
 	//----------------------------------------------------------------//
 	static int		_getBufferTable				( lua_State* L );
@@ -76,7 +76,7 @@ public:
 	GET_SET ( MOAICamera*, Camera, mCamera )
 	GET_SET ( MOAIViewport*, Viewport, mViewport )
 	GET_SET ( MOAIFrameBuffer*, FrameBuffer, mFrameBuffer )
-	GET_SET ( MOAIRenderable*, Renderable, mRenderable )
+	GET_SET ( MOAIBaseDrawable*, Renderable, mRenderable )
 	
 	//----------------------------------------------------------------//
 					MOAIRenderMgr				();

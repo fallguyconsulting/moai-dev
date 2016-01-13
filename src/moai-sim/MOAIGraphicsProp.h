@@ -4,10 +4,10 @@
 #ifndef	MOAIGRAPHICSPROP_H
 #define	MOAIGRAPHICSPROP_H
 
+#include <moai-sim/MOAIBaseDrawable.h>
 #include <moai-sim/MOAIBlendMode.h>
 #include <moai-sim/MOAIColor.h>
 #include <moai-sim/MOAIProp.h>
-#include <moai-sim/MOAIRenderable.h>
 #include <moai-sim/MOAITransform.h>
 
 class MOAICellCoord;
@@ -75,7 +75,7 @@ class MOAISingleTexture;
 class MOAIGraphicsProp :
 	public MOAIProp,
 	public MOAIColor,
-	public MOAIRenderable {
+	public MOAIBaseDrawable {
 private:
 	
 	//----------------------------------------------------------------//
@@ -192,7 +192,6 @@ public:
 	void					OnDepNodeUpdate				();
 	void					RegisterLuaClass			( MOAILuaState& state );
 	void					RegisterLuaFuncs			( MOAILuaState& state );
-	void					Render						();
 	void					SerializeIn					( MOAILuaState& state, MOAIDeserializer& serializer );
 	void					SerializeOut				( MOAILuaState& state, MOAISerializer& serializer );
 	void					SetVisible					( bool visible );

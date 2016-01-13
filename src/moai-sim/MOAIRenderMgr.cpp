@@ -102,7 +102,7 @@ int MOAIRenderMgr::_getRenderCount ( lua_State* L ) {
 		@text	Pushes a renderable onto the render stack. THIS METHOD
 				IS DEPRECATED AND WILL BE REMOVED IN A FUTURE RELEASE.
 
-		@in		MOAIRenderable renderable
+		@in		MOAIBaseDrawable renderable
 		@out	nil
 	*/
 	int MOAIRenderMgr::_pushRenderPass ( lua_State* L ) {
@@ -114,7 +114,7 @@ int MOAIRenderMgr::_getRenderCount ( lua_State* L ) {
 				IS DEPRECATED AND WILL BE REMOVED IN A FUTURE RELEASE.
 				Superseded by setRenderTable.
 
-		@in		MOAIRenderable renderable
+		@in		MOAIBaseDrawable renderable
 		@out	nil
 	*/
 	int MOAIRenderMgr::_removeRenderPass ( lua_State* L ) {
@@ -123,7 +123,7 @@ int MOAIRenderMgr::_getRenderCount ( lua_State* L ) {
 	//----------------------------------------------------------------//
 	/**	@lua	setRenderTable
 		@text	Sets the table to be used for rendering. This should be
-				an array indexed from 1 consisting of MOAIRenderable objects
+				an array indexed from 1 consisting of MOAIBaseDrawable objects
 				and sub-tables. Objects will be rendered in order starting
 				from index 1 and continuing until 'nil' is encountered.
 		

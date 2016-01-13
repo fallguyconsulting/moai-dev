@@ -204,6 +204,67 @@ void MOAICollisionWorld::DoCallback ( u32 eventID, MOAICollisionProp& prop0, MOA
 }
 
 //----------------------------------------------------------------//
+void MOAICollisionWorld::Draw ( int subPrimID, float lod ) {
+	UNUSED ( subPrimID );
+	UNUSED ( lod );
+
+	MOAIDebugLines& debugLines = MOAIDebugLines::Get ();
+	MOAIDraw& draw = MOAIDraw::Get ();
+	UNUSED ( draw ); // mystery warning in vs2008
+
+	draw.Bind ();
+
+	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
+
+	gfxDevice.SetVertexMtxMode ( MOAIGfxDevice::VTX_STAGE_WORLD, MOAIGfxDevice::VTX_STAGE_PROJ );
+	gfxDevice.SetVertexTransform ( MOAIGfxDevice::VTX_WORLD_TRANSFORM );
+
+	MOAICollisionProp* drawList = 0;
+
+	OverlapListIt overlapIt = this->mOverlapList.Head ();
+	for ( ; overlapIt; overlapIt = overlapIt->Next ()) {
+		MOAIPropOverlap& overlap = *overlapIt->Data ();
+	
+		MOAICollisionProp& prop0 = *overlap.mLeft.mOther;
+		MOAICollisionProp& prop1 = *overlap.mRight.mOther;
+	
+		if ( !prop0.mInDrawList ) {
+			prop0.mNextInDrawList = drawList;
+			prop0.mInDrawList = true;
+			drawList = &prop0;
+		}
+		
+		if ( !prop1.mInDrawList ) {
+			prop1.mNextInDrawList = drawList;
+			prop1.mInDrawList = true;
+			drawList = &prop1;
+		}
+	}
+	
+	ActiveListIt activeIt = this->mActiveList.Head ();
+	for ( ; activeIt; activeIt = activeIt->Next ()) {
+		MOAICollisionProp& prop = *activeIt->Data ();
+		
+		if ( !prop.mInDrawList ) {
+			prop.mInDrawList = true;
+			prop.mNextInDrawList = drawList;
+			drawList = &prop;
+		}
+	}
+	
+	MOAICollisionProp* cursor = drawList;
+	while ( cursor ) {
+	
+		MOAICollisionProp& prop = *cursor;
+		cursor = cursor->mNextInDrawList;
+		
+		this->DrawCollisionProp ( prop );
+		prop.mInDrawList = false;
+		prop.mNextInDrawList = 0;
+	}
+}
+
+//----------------------------------------------------------------//
 void MOAICollisionWorld::DrawCollisionProp ( MOAICollisionProp& prop ) {
 
 	MOAIDebugLines& debugLines = MOAIDebugLines::Get ();
@@ -299,7 +360,7 @@ MOAICollisionWorld::MOAICollisionWorld () :
 	
 	RTTI_BEGIN
 		RTTI_EXTEND ( MOAIAction )
-		RTTI_EXTEND ( MOAIRenderable )
+		RTTI_EXTEND ( MOAIBaseDrawable )
 	RTTI_END
 }
 
@@ -438,7 +499,7 @@ void MOAICollisionWorld::PruneOverlaps ( MOAICollisionProp& prop ) {
 void MOAICollisionWorld::RegisterLuaClass ( MOAILuaState& state ) {
 
 	MOAIAction::RegisterLuaClass ( state );
-	MOAIRenderable::RegisterLuaClass ( state );
+	MOAIBaseDrawable::RegisterLuaClass ( state );
 	
 	state.SetField ( -1, "OVERLAP_BEGIN",				( u32 )OVERLAP_BEGIN );
 	state.SetField ( -1, "OVERLAP_END",					( u32 )OVERLAP_END );
@@ -449,7 +510,7 @@ void MOAICollisionWorld::RegisterLuaClass ( MOAILuaState& state ) {
 void MOAICollisionWorld::RegisterLuaFuncs ( MOAILuaState& state ) {
 	
 	MOAIAction::RegisterLuaFuncs ( state );
-	MOAIRenderable::RegisterLuaFuncs ( state );
+	MOAIBaseDrawable::RegisterLuaFuncs ( state );
 	
 	luaL_Reg regTable [] = {
 		{ "insertProp",			_insertProp },
@@ -475,72 +536,13 @@ void MOAICollisionWorld::RemoveProp ( MOAICollisionProp& prop ) {
 }
 
 //----------------------------------------------------------------//
-void MOAICollisionWorld::Render () {
-
-	MOAIDebugLines& debugLines = MOAIDebugLines::Get ();
-	MOAIDraw& draw = MOAIDraw::Get ();
-	UNUSED ( draw ); // mystery warning in vs2008
-
-	draw.Bind ();
-
-	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
-
-	gfxDevice.SetVertexMtxMode ( MOAIGfxDevice::VTX_STAGE_WORLD, MOAIGfxDevice::VTX_STAGE_PROJ );
-	gfxDevice.SetVertexTransform ( MOAIGfxDevice::VTX_WORLD_TRANSFORM );
-
-	MOAICollisionProp* drawList = 0;
-
-	OverlapListIt overlapIt = this->mOverlapList.Head ();
-	for ( ; overlapIt; overlapIt = overlapIt->Next ()) {
-		MOAIPropOverlap& overlap = *overlapIt->Data ();
-	
-		MOAICollisionProp& prop0 = *overlap.mLeft.mOther;
-		MOAICollisionProp& prop1 = *overlap.mRight.mOther;
-	
-		if ( !prop0.mInDrawList ) {
-			prop0.mNextInDrawList = drawList;
-			prop0.mInDrawList = true;
-			drawList = &prop0;
-		}
-		
-		if ( !prop1.mInDrawList ) {
-			prop1.mNextInDrawList = drawList;
-			prop1.mInDrawList = true;
-			drawList = &prop1;
-		}
-	}
-	
-	ActiveListIt activeIt = this->mActiveList.Head ();
-	for ( ; activeIt; activeIt = activeIt->Next ()) {
-		MOAICollisionProp& prop = *activeIt->Data ();
-		
-		if ( !prop.mInDrawList ) {
-			prop.mInDrawList = true;
-			prop.mNextInDrawList = drawList;
-			drawList = &prop;
-		}
-	}
-	
-	MOAICollisionProp* cursor = drawList;
-	while ( cursor ) {
-	
-		MOAICollisionProp& prop = *cursor;
-		cursor = cursor->mNextInDrawList;
-		
-		this->DrawCollisionProp ( prop );
-		prop.mInDrawList = false;
-		prop.mNextInDrawList = 0;
-	}
-}
-
-//----------------------------------------------------------------//
 void MOAICollisionWorld::SerializeIn ( MOAILuaState& state, MOAIDeserializer& serializer ) {
 	MOAIAction::SerializeIn ( state, serializer );
-	MOAIRenderable::SerializeIn ( state, serializer );
+	MOAIBaseDrawable::SerializeIn ( state, serializer );
 }
 
 //----------------------------------------------------------------//
 void MOAICollisionWorld::SerializeOut ( MOAILuaState& state, MOAISerializer& serializer ) {
 	MOAIAction::SerializeOut ( state, serializer );
-	MOAIRenderable::SerializeOut ( state, serializer );
+	MOAIBaseDrawable::SerializeOut ( state, serializer );
 }

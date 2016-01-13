@@ -12,7 +12,7 @@
 class MOAIGraphicsProp2D :
 	public MOAITransform2D,
 	public MOAIColor,
-	public MOAIRenderable {
+	public MOAIBaseDrawable {
 protected:
 
 	//----------------------------------------------------------------//

@@ -2,11 +2,11 @@
 // http://getmoai.com
 
 #include "pch.h"
+#include <moai-sim/MOAIBaseDrawable.h>
 #include <moai-sim/MOAIColor.h>
 #include <moai-sim/MOAIFrameBuffer.h>
 #include <moai-sim/MOAIGfxDevice.h>
 #include <moai-sim/MOAIImage.h>
-#include <moai-sim/MOAIRenderable.h>
 #include <moai-sim/MOAIRenderMgr.h>
 
 //================================================================//
@@ -282,7 +282,7 @@ int MOAIFrameBuffer::_isPendingGrab ( lua_State* L ) {
 //----------------------------------------------------------------//
 /**	@lua	setRenderTable
 	@text	Sets the table to be used for rendering. This should be
-			an array indexed from 1 consisting of MOAIRenderable objects
+			an array indexed from 1 consisting of MOAIBaseDrawable objects
 			and sub-tables. Objects will be rendered in order starting
 			from index 1 and continuing until 'nil' is encountered.
 	
@@ -449,10 +449,10 @@ void MOAIFrameBuffer::RenderTable ( MOAILuaState& state, int idx ) {
 		int valType = lua_type ( state, -1 );
 			
 		if ( valType == LUA_TUSERDATA ) {
-			MOAIRenderable* renderable = state.GetLuaObject < MOAIRenderable >( -1, false );
+			MOAIBaseDrawable* renderable = state.GetLuaObject < MOAIBaseDrawable >( -1, false );
 			if ( renderable ) {
 				renderMgr.SetRenderable ( renderable );
-				renderable->Render ();
+				renderable->Draw ();
 			}
 		}
 		else if ( valType == LUA_TTABLE ) {

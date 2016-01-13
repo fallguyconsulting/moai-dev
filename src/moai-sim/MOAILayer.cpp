@@ -793,7 +793,7 @@ void MOAILayer::Draw ( int subPrimID, float lod  ) {
 	
 	if ( this->mPartition ) {
 		
-		u32 interfaceMask = this->mPartition->GetInterfaceMask < MOAIGraphicsProp >();
+		u32 interfaceMask = this->mPartition->GetInterfaceMask < MOAIBaseDrawable >();
 		if ( !interfaceMask ) return;
 		
 		MOAIPartitionResultBuffer& buffer = MOAIPartitionResultMgr::Get ().GetBuffer ();
@@ -852,15 +852,15 @@ void MOAILayer::DrawProps ( MOAIPartitionResultBuffer& buffer, float lod ) {
 	if ( this->mLODMode == LOD_FROM_PROP_SORT_Z ) {
 		for ( u32 i = 0; i < totalResults; ++i ) {
 			MOAIPartitionResult* result = buffer.GetResultUnsafe ( i );
-			MOAIGraphicsProp* graphicsProp = result->mProp->AsType < MOAIGraphicsProp >();
-			graphicsProp->Draw ( result->mSubPrimID, result->mLoc.mZ * lod );
+			MOAIBaseDrawable* drawable = result->mProp->AsType < MOAIBaseDrawable >();
+			drawable->Draw ( result->mSubPrimID, result->mLoc.mZ * lod );
 		}
 	}
 	else {
 		for ( u32 i = 0; i < totalResults; ++i ) {
 			MOAIPartitionResult* result = buffer.GetResultUnsafe ( i );
-			MOAIGraphicsProp* graphicsProp = result->mProp->AsType < MOAIGraphicsProp >();
-			graphicsProp->Draw ( result->mSubPrimID, lod );
+			MOAIBaseDrawable* drawable = result->mProp->AsType < MOAIBaseDrawable >();
+			drawable->Draw ( result->mSubPrimID, lod );
 		}
 	}
 }
@@ -873,15 +873,15 @@ void MOAILayer::DrawPropsDebug ( MOAIPartitionResultBuffer& buffer, float lod ) 
 	if ( this->mLODMode == LOD_FROM_PROP_SORT_Z ) {
 		for ( u32 i = 0; i < totalResults; ++i ) {
 			MOAIPartitionResult* result = buffer.GetResultUnsafe ( i );
-			MOAIGraphicsProp* graphicsProp = result->mProp->AsType < MOAIGraphicsProp >();
-			graphicsProp->DrawDebug ( result->mSubPrimID, result->mLoc.mZ );
+			MOAIBaseDrawable* drawable = result->mProp->AsType < MOAIBaseDrawable >();
+			drawable->DrawDebug ( result->mSubPrimID, result->mLoc.mZ );
 		}
 	}
 	else {
 		for ( u32 i = 0; i < totalResults; ++i ) {
 			MOAIPartitionResult* result = buffer.GetResultUnsafe ( i );
-			MOAIGraphicsProp* graphicsProp = result->mProp->AsType < MOAIGraphicsProp >();
-			graphicsProp->DrawDebug ( result->mSubPrimID, lod );
+			MOAIBaseDrawable* drawable = result->mProp->AsType < MOAIBaseDrawable >();
+			drawable->DrawDebug ( result->mSubPrimID, lod );
 		}
 	}
 }
@@ -1067,12 +1067,6 @@ void MOAILayer::RegisterLuaFuncs ( MOAILuaState& state ) {
 }
 
 //----------------------------------------------------------------//
-void MOAILayer::Render () {
-	
-	this->Draw ( MOAIProp::NO_SUBPRIM_ID, 0.0f );
-}
-
-//----------------------------------------------------------------//
 void MOAILayer::RenderTable ( MOAILuaRef& ref ) {
 
 	if ( ref ) {
@@ -1098,9 +1092,9 @@ void MOAILayer::RenderTable ( MOAILuaState& state, int idx ) {
 		switch ( valType ) {
 		
 			case LUA_TUSERDATA: {
-				MOAIRenderable* renderable = state.GetLuaObject < MOAIRenderable >( -1, false );
+				MOAIBaseDrawable* renderable = state.GetLuaObject < MOAIBaseDrawable >( -1, false );
 				if ( renderable ) {
-					renderable->Render ();
+					renderable->Draw ();
 				}
 				break;
 			}
