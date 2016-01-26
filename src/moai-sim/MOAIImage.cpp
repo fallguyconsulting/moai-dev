@@ -1164,26 +1164,8 @@ MOAIImage* MOAIImage::AffirmImage ( MOAILuaState& state, int idx ) {
 //----------------------------------------------------------------//
 void MOAIImage::Alloc () {
 
-	if ( this->mBitmap ) {
-		free ( this->mBitmap );
-		this->mBitmap = 0;
-	}
-
-	if ( this->mPalette ) {
-		free ( this->mPalette );
-		this->mPalette = 0;
-	}
-	
-	u32 bitmapSize = this->GetBitmapSize ();
-	if ( bitmapSize ) {
-		this->mBitmap = malloc ( bitmapSize );
-	}
-	
-	u32 paletteSize = this->GetPaletteSize ();
-	if ( paletteSize ) {
-		this->mPalette = malloc ( paletteSize );
-		memset ( this->mPalette, 0, paletteSize );
-	}
+	this->mBitmap.Alloc ( this->GetBitmapSize ());
+	this->mPalette.Alloc ( this->GetPaletteSize ());
 }
 
 //----------------------------------------------------------------//
@@ -1259,11 +1241,11 @@ void MOAIImage::BleedRect ( ZLIntRect rect ) {
 	u32 bitDepth = this->GetPixelDepthInBits ();
 	
 	if ( yMin > 0 ) {
-		ZLBitBuffer::Blit ( this->GetRowAddr ( yMin - 1 ), xMin, this->GetRowAddr ( yMin ), xMin, xMax - xMin, bitDepth );
+		ZLBitBuffer::Blit ( this->GetRowAddrMutable ( yMin - 1 ), xMin, this->GetRowAddr ( yMin ), xMin, xMax - xMin, bitDepth );
 	}
 	
 	if ( yMax < height ) {
-		ZLBitBuffer::Blit ( this->GetRowAddr ( yMax ), xMin, this->GetRowAddr ( yMax - 1 ), xMin, xMax - xMin, bitDepth );
+		ZLBitBuffer::Blit ( this->GetRowAddrMutable ( yMax ), xMin, this->GetRowAddr ( yMax - 1 ), xMin, xMax - xMin, bitDepth );
 	}
 }
 
@@ -1330,7 +1312,7 @@ void MOAIImage::Blit ( const MOAIImage& image, int srcX, int srcY, int destX, in
 	for ( int y = 0; y < height; ++y ) {
 		
 		const void* srcRow = image.GetRowAddr ( y + srcY );
-		void* destRow = this->GetRowAddr ( y + destY );
+		void* destRow = this->GetRowAddrMutable ( y + destY );
 		
 		ZLBitBuffer::Blit ( destRow, destX, srcRow, srcX, width, pixelDepth );
 	}
@@ -1465,29 +1447,22 @@ void MOAIImage::CalculateSDF( ZLIntVec2D** grid, int width, int height ) {
 //----------------------------------------------------------------//
 void MOAIImage::Clear () {
 
-	if ( this->mBitmap ) {
-		free ( this->mBitmap );
-	}
-	
-	if ( this->mPalette ) {
-		free ( this->mPalette );
-	}
+	this->mBitmap.Free ();
+	this->mPalette.Free ();
 	
 	this->mColorFormat	= ZLColor::CLR_FMT_UNKNOWN;
 	this->mPixelFormat	= PXL_FMT_UNKNOWN;
 
 	this->mWidth		= 0;
 	this->mHeight		= 0;
-	
-	this->mBitmap		= 0;
-	this->mPalette		= 0;
 }
 
 //----------------------------------------------------------------//
 void MOAIImage::ClearBitmap () {
 
-	if ( this->mBitmap ) {
-		memset ( this->mBitmap, 0, this->GetBitmapSize ());
+	void* bitmap = this->mBitmap.Invalidate ();
+	if ( bitmap ) {
+		memset ( bitmap, 0, this->GetBitmapSize ());
 	}
 }
 
@@ -1507,7 +1482,7 @@ void MOAIImage::ClearRect ( ZLIntRect rect ) {
 	u32 pixelDepth = this->GetPixelDepthInBits ();
 	
 	for ( int y = rect.mYMin; y < rect.mYMax; ++y ) {
-		ZLBitBuffer::Clear ( this->GetRowAddr ( y ), pixelDepth, width, pixelDepth );
+		ZLBitBuffer::Clear ( this->GetRowAddrMutable ( y ), pixelDepth, width, pixelDepth );
 	}
 }
 
@@ -1630,7 +1605,7 @@ bool MOAIImage::Convert ( const MOAIImage& image, ZLColor::ColorFormat colorFmt,
 			// we'll use the helper method in ZLColor which is a little more efficient
 			for ( u32 y = 0; y < image.mHeight; ++y ) {
 				const void* srcRow = image.GetRowAddr ( y );
-				void* destRow = newImage.GetRowAddr ( y );
+				void* destRow = newImage.GetRowAddrMutable ( y );
 				ZLColor::Convert ( destRow, newImage.mColorFormat, srcRow, image.mColorFormat, image.mWidth );
 			}
 		}
@@ -1639,7 +1614,7 @@ bool MOAIImage::Convert ( const MOAIImage& image, ZLColor::ColorFormat colorFmt,
 	
 		// pixel format is indexed color, so just convert the palette
 		u32 total = image.GetPaletteCount ();
-		ZLColor::Convert ( newImage.mPalette, newImage.mColorFormat, image.mPalette, image.mColorFormat, total );
+		ZLColor::Convert ( newImage.mPalette.Invalidate (), newImage.mColorFormat, image.mPalette.GetBuffer (), image.mColorFormat, total );
 	}
 	
 	this->Take ( newImage );
@@ -1758,17 +1733,16 @@ void MOAIImage::Copy ( const MOAIImage& image ) {
 
 	if ( this == &image ) return;
 
-	this->Init ( image.mWidth, image.mHeight, image.mColorFormat, image.mPixelFormat );
+	this->mColorFormat	= image.mColorFormat;
+	this->mPixelFormat	= image.mPixelFormat;
+
+	this->mWidth		= image.mWidth;
+	this->mHeight		= image.mHeight;
 	
-	size_t bitmapSize = this->GetBitmapSize ();
-	if ( bitmapSize ) {
-		memcpy ( this->mBitmap, image.mBitmap, bitmapSize );
-	}
+	this->mBitmap		= image.mBitmap;
+	this->mPalette		= image.mPalette;
 	
-	size_t paletteSize = this->GetPaletteSize ();
-	if ( paletteSize ) {
-		memcpy ( this->mPalette, image.mPalette, paletteSize );
-	}
+	this->OnImageStatusChanged ( true );
 }
 
 //----------------------------------------------------------------//
@@ -2022,11 +1996,11 @@ void MOAIImage::Desaturate ( const MOAIImage& image, float rY, float gY, float b
 
 	if ( this->mPixelFormat == TRUECOLOR ) {
 		for ( u32 y = 0; y < this->mHeight; y++ ) {
-			ZLColor::Desaturate ( this->GetRowAddr ( y ), this->mColorFormat, this->mWidth, rY, gY, bY, K );
+			ZLColor::Desaturate ( this->GetRowAddrMutable ( y ), this->mColorFormat, this->mWidth, rY, gY, bY, K );
 		}
 	}
 	else {
-		ZLColor::Desaturate ( this->mPalette, this->mColorFormat, this->GetPaletteCount (), rY, gY, bY, K );
+		ZLColor::Desaturate ( this->mPalette.Invalidate (), this->mColorFormat, this->GetPaletteCount (), rY, gY, bY, K );
 	}
 }
 
@@ -2286,11 +2260,11 @@ void MOAIImage::GammaCorrection ( const MOAIImage& image, float gamma ) {
 
 	if ( this->mPixelFormat == TRUECOLOR ) {
 		for ( u32 y = 0; y < this->mHeight; y++ ) {
-			ZLColor::GammaCorrection ( this->GetRowAddr ( y ), this->mColorFormat, this->mWidth, gamma );
+			ZLColor::GammaCorrection ( this->GetRowAddrMutable ( y ), this->mColorFormat, this->mWidth, gamma );
 		}
 	}
 	else {
-		ZLColor::GammaCorrection ( this->mPalette, this->mColorFormat, this->GetPaletteCount (), gamma );
+		ZLColor::GammaCorrection ( this->mPalette.Invalidate (), this->mColorFormat, this->GetPaletteCount (), gamma );
 	}
 }
 
@@ -2651,7 +2625,7 @@ ZLIntRect MOAIImage::GetBounds () {
 //----------------------------------------------------------------//
 u32 MOAIImage::GetColor ( u32 x, u32 y ) const {
 
-	if ( !this->mBitmap ) return 0;
+	if ( !this->mBitmap.GetSize ()) return 0;
 
 	if ( this->mPixelFormat == TRUECOLOR ) {
 		return ZLColor::ConvertToRGBA ( this->GetPixel ( x, y ), this->mColorFormat );
@@ -2659,7 +2633,6 @@ u32 MOAIImage::GetColor ( u32 x, u32 y ) const {
 	else {
 		return this->GetPaletteColor ( this->GetPixel ( x, y ));
 	}
-
 	return 0;	
 }
 
@@ -2684,7 +2657,7 @@ u32 MOAIImage::GetPaletteColor ( u32 i ) const {
 
 	u32 total = this->GetPaletteCount ();
 	if ( i < total ) {
-		u32 pixel = ZLBitBuffer::GetValue ( this->mPalette, i, ZLColor::GetDepthInBits ( this->mColorFormat ));
+		u32 pixel = ZLBitBuffer::GetValue ( this->mPalette.GetBuffer (), i, ZLColor::GetDepthInBits ( this->mColorFormat ));
 		return ZLColor::ConvertToRGBA ( pixel, this->mColorFormat );
 	}
 	return 0;
@@ -2737,15 +2710,15 @@ ZLIntRect MOAIImage::GetRect () {
 }
 
 //----------------------------------------------------------------//
-void* MOAIImage::GetRowAddr ( u32 y ) {
+const void* MOAIImage::GetRowAddr ( u32 y ) const {
 
-	return ( void* )(( size_t )this->mBitmap + ( this->GetRowSize () * y ));
+	return ( const void* )(( size_t )this->mBitmap.GetBuffer () + ( this->GetRowSize () * y ));
 }
 
 //----------------------------------------------------------------//
-const void* MOAIImage::GetRowAddr ( u32 y ) const {
+void* MOAIImage::GetRowAddrMutable ( u32 y ) {
 
-	return ( const void* )(( size_t )this->mBitmap + ( this->GetRowSize () * y ));
+	return ( void* )(( size_t )this->mBitmap.Invalidate () + ( this->GetRowSize () * y ));
 }
 
 //----------------------------------------------------------------//
@@ -2788,7 +2761,7 @@ void MOAIImage::Init ( u32 width, u32 height, ZLColor::ColorFormat colorFmt, Pix
 }
 
 //----------------------------------------------------------------//
-void MOAIImage::Init ( void* bitmap, u32 width, u32 height, ZLColor::ColorFormat colorFmt ) {
+void MOAIImage::Init ( const void* bitmap, u32 width, u32 height, ZLColor::ColorFormat colorFmt ) {
 
 	this->Clear ();
 
@@ -2802,7 +2775,7 @@ void MOAIImage::Init ( void* bitmap, u32 width, u32 height, ZLColor::ColorFormat
 	
 	this->Alloc ();
 	u32 size = this->GetBitmapSize ();
-	memcpy ( this->mBitmap, bitmap, size );
+	memcpy ( this->mBitmap.Invalidate (), bitmap, size );
 	
 	this->OnImageStatusChanged ( this->IsOK ());
 }
@@ -2856,7 +2829,7 @@ bool MOAIImage::Load ( ZLStream& stream, u32 transform ) {
 //----------------------------------------------------------------//
 bool MOAIImage::IsOK () {
 
-	return ( this->mBitmap != 0 );
+	return ( this->mBitmap.GetSize () != 0 );
 }
 
 //----------------------------------------------------------------//
@@ -2929,11 +2902,11 @@ void MOAIImage::Mix ( const MOAIImage& image, const ZLMatrix4x4& mtx, float K ) 
 
 	if ( this->mPixelFormat == TRUECOLOR ) {
 		for ( u32 y = 0; y < this->mHeight; y++ ) {
-			ZLColor::Mix ( this->GetRowAddr ( y ), this->mColorFormat, this->mWidth, mtx, K );
+			ZLColor::Mix ( this->GetRowAddrMutable ( y ), this->mColorFormat, this->mWidth, mtx, K );
 		}
 	}
 	else {
-		ZLColor::Mix ( this->mPalette, this->mColorFormat, this->GetPaletteCount (), mtx, K );
+		ZLColor::Mix ( this->mPalette.Invalidate (), this->mColorFormat, this->GetPaletteCount (), mtx, K );
 	}
 }
 
@@ -2942,9 +2915,7 @@ MOAIImage::MOAIImage () :
 	mPixelFormat ( PXL_FMT_UNKNOWN ),
 	mColorFormat ( ZLColor::CLR_FMT_UNKNOWN ),
 	mWidth ( 0 ),
-	mHeight ( 0 ),
-	mBitmap ( 0 ),
-	mPalette ( 0 ) {
+	mHeight ( 0 ) {
 	
 	RTTI_SINGLE ( MOAILuaObject )
 }
@@ -2981,11 +2952,11 @@ void MOAIImage::PremultiplyAlpha ( const MOAIImage& image ) {
 
 	if ( this->mPixelFormat == TRUECOLOR ) {
 		for ( u32 y = 0; y < this->mHeight; ++y ) {
-			ZLColor::PremultiplyAlpha ( this->GetRowAddr ( y ), this->mColorFormat, this->mWidth );
+			ZLColor::PremultiplyAlpha ( this->GetRowAddrMutable ( y ), this->mColorFormat, this->mWidth );
 		}
 	}
 	else {
-		ZLColor::PremultiplyAlpha ( this->mPalette, this->mColorFormat, this->GetPaletteCount ());
+		ZLColor::PremultiplyAlpha ( this->mPalette.Invalidate (), this->mColorFormat, this->GetPaletteCount ());
 	}
 }
 
@@ -3149,7 +3120,7 @@ void MOAIImage::ResizeCanvas ( const MOAIImage& image, ZLIntRect rect ) {
 		
 		for ( int y = 0; y < height; ++y ) {
 		
-			void* destRow = newImage.GetRowAddr ( y );
+			void* destRow = newImage.GetRowAddrMutable ( y );
 		
 			if (( y < srcRect.mYMin ) || ( y >= srcRect.mYMax )) {
 			
@@ -3258,7 +3229,7 @@ void MOAIImage::SetPaletteColor ( u32 idx, u32 rgba ) {
 		u32 color = ZLColor::ConvertFromRGBA ( rgba, this->mColorFormat );
 		u32 colorDepth = ZLColor::GetDepthInBits ( this->mColorFormat );
 		
-		ZLBitBuffer::SetValue ( this->mPalette, color, idx, colorDepth );
+		ZLBitBuffer::SetValue ( this->mPalette.Invalidate (), color, idx, colorDepth );
 	}
 }
 
@@ -3267,7 +3238,7 @@ void MOAIImage::SetPixel ( u32 x, u32 y, u32 pixel ) {
 
 	if (( x >= this->mWidth ) || ( y >= this->mHeight )) return;
 	
-	ZLBitBuffer::SetValue ( this->GetRowAddr ( y ), pixel, x, this->GetPixelDepthInBits ());
+	ZLBitBuffer::SetValue ( this->GetRowAddrMutable ( y ), pixel, x, this->GetPixelDepthInBits ());
 }
 
 //----------------------------------------------------------------//
@@ -3281,11 +3252,11 @@ void MOAIImage::SimpleThreshold ( const MOAIImage& image, float rT, float gT, fl
 	
 	if ( this->mPixelFormat == TRUECOLOR ) {
 		for ( u32 y = 0; y < this->mHeight; ++y ) {
-			ZLColor::SimpleThreshold ( this->GetRowAddr ( y ), this->mColorFormat, this->mWidth, threshold );
+			ZLColor::SimpleThreshold ( this->GetRowAddrMutable ( y ), this->mColorFormat, this->mWidth, threshold );
 		}
 	}
 	else {
-		ZLColor::SimpleThreshold ( this->mPalette, this->mColorFormat, this->GetPaletteCount (), threshold );
+		ZLColor::SimpleThreshold ( this->mPalette.Invalidate (), this->mColorFormat, this->GetPaletteCount (), threshold );
 	}
 }
 

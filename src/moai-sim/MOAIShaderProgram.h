@@ -56,9 +56,9 @@ protected:
 	STLString		mVertexShaderSource;
 	STLString		mFragmentShaderSource;
 
-	u32				mProgram;
-	u32				mVertexShader;
-	u32				mFragmentShader;
+	ZLGfxHandle*	mProgram;
+	ZLGfxHandle*	mVertexShader;
+	ZLGfxHandle*	mFragmentShader;
 
 	typedef STLMap < u32, STLString >::iterator AttributeMapIt;
 	STLMap < u32, STLString > mAttributeMap;
@@ -80,10 +80,7 @@ protected:
 	static int		_setVertexAttribute			( lua_State* L );
 
 	//----------------------------------------------------------------//
-	u32				CompileShader				( u32 type, cc8* source );
-	u32				GetLoadingPolicy			();
-	void			PrintProgramLog				( u32 program );
-	void			PrintShaderLog				( u32 shader );
+	ZLGfxHandle*	CompileShader				( u32 type, cc8* source );
 	bool			OnCPUCreate					();
 	void			OnCPUDestroy				();
 	void			OnGPUBind					();
@@ -91,7 +88,8 @@ protected:
 	void			OnGPUDestroy				();
 	void			OnGPULost					();
 	void			OnGPUUnbind					();
-	bool			Validate					();
+	bool			OnGPUUpdate					();
+	void			OnUniformLocation			( u32 addr, void* userdata );
 
 public:
 
@@ -121,7 +119,7 @@ public:
 	void			DeclareUniform				( u32 idx, cc8* name, u32 type, float value );
 	void			DeclareUniform				( u32 idx, cc8* name, u32 type, int value );
 	bool			IsValid						();
-	bool			LoadGfxState				();
+	//bool			LoadGfxState				();
 					MOAIShaderProgram			();
 					~MOAIShaderProgram			();
 	void			RegisterLuaClass			( MOAILuaState& state );
