@@ -39,7 +39,7 @@ if checkHelp ( command ) then
 	printHelp ( command )
 else
 
-	print ( 'pito - the MOAI toolbelt - general usage:' )
+	print ( 'moaiutil - general usage:' )
 	print ()
 
 	local directories = MOAIFileSystem.listDirectories ( UTIL_DIR )

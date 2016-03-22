@@ -1,2 +1,2 @@
-pito help <command>
+moaiutil help <command>
 	Print help doc for command.

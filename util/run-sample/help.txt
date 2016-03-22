@@ -1,2 +1,2 @@
-pito run-sample
+moaiutil run-sample
 	Runs a MOAI sample.

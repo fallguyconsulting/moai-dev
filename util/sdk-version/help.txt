@@ -1,2 +1,2 @@
-pito sdk-version
+moaiutil sdk-version
 	Obtain the MOAI SDK Version info for the current configuration.
