@@ -34,26 +34,32 @@ task ( 'cleanLibraries',type: Delete) {
 }
 
 task ( 'copyLuaScripts', type: Copy ){
-    from '../../samples-anim-basic'
+    from '../../../samples/anim-curve'
     into 'src/main/assets/lua'
 }
 
 task ( 'copyLibraries', type: Copy ){
-    from '../../ndk/libmoai/libs'
+    from '../../../ndk/libmoai/libs'
     into 'src/main/jniLibs'
 }
 
-assembleDebug.dependsOn cleanLuaScripts
-assembleRelease.dependsOn cleanLuaScripts
+//task cleanLibmoai ( type: Exec ) {
+//    workingDir "$projectDir/../../../ndk"
+//    commandLine 'sh', './ndk/libmoai-clean.sh'
+//}
 
-assembleDebug.dependsOn cleanLibraries
-assembleRelease.dependsOn cleanLibraries
+//task buildLibmoai ( type: Exec ) {
+//    workingDir "$projectDir/../../../ndk"
+//    commandLine 'sh', './libmoai-build.sh'
+//}
 
-assembleDebug.dependsOn copyLuaScripts
-assembleRelease.dependsOn copyLuaScripts
+//clean.dependsOn cleanLibmoai
+clean.dependsOn cleanLuaScripts
+clean.dependsOn cleanLibraries
 
-assembleDebug.dependsOn copyLibraries
-assembleRelease.dependsOn copyLibraries
+//preBuild.dependsOn buildLibmoai
+preBuild.dependsOn copyLuaScripts
+preBuild.dependsOn copyLibraries
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
