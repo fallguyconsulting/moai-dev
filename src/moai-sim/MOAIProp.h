@@ -105,6 +105,7 @@ protected:
 	virtual u32			OnGetModelBounds			( ZLBox& bounds ); // get the prop bounds in model space
 	virtual void		OnBoundsChanged				();
 	virtual void		OnRemoved					();
+	virtual void		OnSetDeck					( MOAIDeck* deck );
 	virtual bool		PrepareForInsertion			( const MOAIPartition& partition );
 	u32					ResolveModelBounds			( ZLBox& bounds );
 	void				UpdateWorldBounds			( u32 status );

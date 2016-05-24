@@ -6,6 +6,8 @@
 
 #include <moai-sim/MOAISurfaceSampler2D.h>
 
+class MOAISurfaceFeeler2D;
+
 //================================================================//
 // MOAISurfaceFeelerState2D
 //================================================================//

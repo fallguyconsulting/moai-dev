@@ -4,6 +4,7 @@
 #include "pch.h"
 #include <moai-sim/MOAIDebugLines.h>
 #include <moai-sim/MOAIDeckRemapper.h>
+#include <moai-sim/MOAIGfxDevice.h>
 #include <moai-sim/MOAIGrid.h>
 #include <moai-sim/MOAIProp.h>
 #include <moai-sim/MOAISurfaceDeck2D.h>
@@ -119,95 +120,39 @@ ZLBox MOAISurfaceDeck2D::ComputeMaxBounds () {
 }
 
 //----------------------------------------------------------------//
-//void MOAISurfaceDeck2D::DrawDebug ( const ZLAffine3D& transform, u32 idx, MOAIDeckRemapper* remapper ) {
-//	
-//	idx = remapper ? remapper->Remap ( idx ) : idx;
-//	
-//	MOAIDebugLines& debugLines = MOAIDebugLines::Get ();
-//	debugLines.SetWorldMtx ( transform );
-//	debugLines.SetPenSpace ( MOAIDebugLines::MODEL_SPACE );
-//	
-//	this->DrawDebug ( idx, 0.0f, 0.0f, false, false );
-//}
-
-//----------------------------------------------------------------//
-//void MOAISurfaceDeck2D::DrawDebug ( u32 idx, float xOff, float yOff, bool xFlip, bool yFlip ) {
-//
-//	idx = idx - 1;
-//	idx = idx % this->mBrushes.Size ();
-//	
-//	MOAIDebugLines& debugLines = MOAIDebugLines::Get ();
-//	
-//	MOAISurfaceBrush2D& brush = this->mBrushes [ idx ];
-//	
-//	u32 total = brush.mEdges.Size ();
-//	for ( u32 i = 0; i < total; ++i ) {
-//		ZLEdge2D& edge = brush.mEdges [ i ];
-//		
-//		ZLVec2D v0 = edge.mV0;
-//		ZLVec2D v1 = edge.mV1;
-//		
-//		if ( xFlip ) {
-//			v0.mX *= -1.0f;
-//			v1.mX *= -1.0f;
-//		}
-//		
-//		if ( !yFlip ) {
-//			v0.mY *= -1.0f;
-//			v1.mY *= -1.0f;
-//		}
-//		
-//		debugLines.DrawLine ( v0.mX + xOff, v0.mY + yOff, v1.mX + xOff, v1.mY + yOff );
-//	}
-//}
-
-//----------------------------------------------------------------//
-//void MOAISurfaceDeck2D::DrawDebug ( const ZLAffine3D& transform, MOAIGrid& grid, MOAIDeckRemapper* remapper, ZLVec2D& gridScale, MOAICellCoord& c0, MOAICellCoord& c1 ) {
-//	UNUSED ( gridScale ); // TODO
-//	
-//	MOAIDebugLines& debugLines = MOAIDebugLines::Get ();
-//	debugLines.SetWorldMtx ( transform );
-//	debugLines.SetPenSpace ( MOAIDebugLines::MODEL_SPACE );
-//	
-//	for ( int y = c0.mY; y <= c1.mY; ++y ) {
-//		for ( int x = c0.mX; x <= c1.mX; ++x ) {
-//			
-//			u32 tile = grid.GetTile ( x, y );
-//			tile = remapper ? remapper->Remap ( tile ) : tile;
-//			
-//			if ( tile & MOAITileFlags::HIDDEN ) continue;
-//			
-//			MOAICellCoord coord ( x, y );
-//			ZLVec2D loc = grid.GetCellPoint ( coord, MOAIGridSpace::TILE_CENTER );
-//			
-//			bool xFlip = (( tile & MOAITileFlags::XFLIP ) != 0 );
-//			bool yFlip = (( tile & MOAITileFlags::YFLIP ) != 0 );
-//			
-//			this->DrawDebug (( tile & MOAITileFlags::CODE_MASK ) - 1, loc.mX, loc.mY, xFlip, yFlip );
-//		}
-//	}
-//}
-
-//----------------------------------------------------------------//
-//void MOAISurfaceDeck2D::GatherSurfaces ( u32 idx, MOAIDeckRemapper* remapper, MOAISurfaceSampler2D& sampler ) {
-//	
-//	idx = remapper ? remapper->Remap ( idx ) : idx;
-//	
-//	idx = idx - 1;
-//	idx = idx % this->mBrushes.Size ();
-//	
-//	MOAISurfaceBrush2D& brush = this->mBrushes [ idx ];
-//
-//	u32 total = brush.mEdges.Size ();
-//	for ( u32 i = 0; i < total; ++i ) {
-//		ZLEdge2D& edge = brush.mEdges [ i ];
-//		
-//		ZLVec2D v0 = edge.mV0;
-//		ZLVec2D v1 = edge.mV1;
-//		
-//		sampler.AddSurfaceFromLocal ( v0, v1 );
-//	}
-//}
+void MOAISurfaceDeck2D::DrawIndex ( u32 idx, MOAIMaterialBatch& materials, ZLVec3D offset, ZLVec3D scale ) {
+	UNUSED ( materials );
+	
+	idx = idx - 1;
+	idx = idx % this->mBrushes.Size ();
+	
+	MOAIGfxDevice& gfxDevice = MOAIGfxDevice::Get ();
+	
+	MOAIDraw& draw = MOAIDraw::Get ();
+	UNUSED ( draw ); // mystery warning in vs2008
+	
+	draw.Bind ();
+	
+	gfxDevice.SetPenColor ( 0xffffffff );
+	gfxDevice.SetPenWidth ( 1.0f );
+	
+	MOAISurfaceBrush2D& brush = this->mBrushes [ idx ];
+	
+	u32 total = brush.mEdges.Size ();
+	for ( u32 i = 0; i < total; ++i ) {
+		ZLEdge2D& edge = brush.mEdges [ i ];
+		
+		ZLVec2D v0 = edge.mV0;
+		ZLVec2D v1 = edge.mV1;
+		
+		draw.DrawLine (
+			v0.mX + offset.mX,
+			v0.mY + offset.mY,
+			v1.mX + offset.mX,
+			v1.mY + offset.mY
+		);
+	}
+}
 
 //----------------------------------------------------------------//
 //void MOAISurfaceDeck2D::GatherSurfaces ( MOAIGrid& grid, MOAIDeckRemapper* remapper, ZLVec2D& gridScale, MOAICellCoord& c0, MOAICellCoord& c1, MOAISurfaceSampler2D& sampler ) {
@@ -297,7 +242,6 @@ ZLBox MOAISurfaceDeck2D::GetItemBounds ( u32 idx ) {
 MOAISurfaceDeck2D::MOAISurfaceDeck2D () {
 
 	RTTI_SINGLE ( MOAIStandardDeck )
-	//this->SetContentMask ( MOAIProp::CAN_DRAW_DEBUG | MOAIProp::CAN_GATHER_SURFACES );
 }
 
 //----------------------------------------------------------------//
@@ -323,4 +267,25 @@ void MOAISurfaceDeck2D::RegisterLuaFuncs ( MOAILuaState& state ) {
 	};
 
 	luaL_register ( state, 0, regTable );
+}
+
+//----------------------------------------------------------------//
+void MOAISurfaceDeck2D::SampleSurfaces ( u32 idx, MOAISurfaceSampler2D& sampler ) {
+	
+	//idx = remapper ? remapper->Remap ( idx ) : idx;
+	
+	idx = idx - 1;
+	idx = idx % this->mBrushes.Size ();
+	
+	MOAISurfaceBrush2D& brush = this->mBrushes [ idx ];
+
+	u32 total = brush.mEdges.Size ();
+	for ( u32 i = 0; i < total; ++i ) {
+		ZLEdge2D& edge = brush.mEdges [ i ];
+		
+		ZLVec2D v0 = edge.mV0;
+		ZLVec2D v1 = edge.mV1;
+		
+		sampler.AddSurfaceFromLocal ( v0, v1 );
+	}
 }

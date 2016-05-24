@@ -27,6 +27,10 @@ private:
 
 	MOAITransform*	mSourcePrim;
 
+	//----------------------------------------------------------------//
+	void		SetObjectMtx				();
+	void		SetObjectMtx				( const ZLAffine3D& localToWorld, const ZLAffine3D& worldToLocal );
+
 public:
 
 	enum {
@@ -44,8 +48,6 @@ public:
 	void		Init						( const ZLAffine3D& worldToSampleMtx, const ZLRect& worldRect );
 				MOAISurfaceSampler2D		();
 				~MOAISurfaceSampler2D		();
-	void		SetObjectMtx				();
-	void		SetObjectMtx				( const ZLAffine3D& localToWorld, const ZLAffine3D& worldToLocal );
 	void		SetSourcePrim				( MOAITransform* sourcePrim );
 };
 

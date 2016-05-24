@@ -63,33 +63,12 @@ void ZLSurface2D::ClampPoint ( ZLVec2D& p ) const {
 }
 
 //----------------------------------------------------------------//
-void ZLSurface2D::DrawDebug ( ZLVec2D e0, ZLVec2D e1 ) {
-	UNUSED ( e0 );
-	UNUSED ( e1 );
-
-	//USDebugHUD& debugHUD = USDebugHUD::Get ();
-	//
-	//debugHUD.DrawLine ( e0, e1, 0xffffffff, 2 );
-	//
-	//ZLVec2D mid = e1;
-	//mid.Sub ( e0 );
-	//mid.Scale ( 0.5f );
-	//mid.Add ( e0 );
-	//
-	//ZLVec2D norm = GetNorm ( e0, e1 );
-	//norm.Scale ( 0.25f );
-	//norm.Add ( mid );
-	//
-	//debugHUD.DrawLine ( mid, norm, 0xffffffff, 1 );
-}
-
-//----------------------------------------------------------------//
-bool ZLSurface2D::GetContact ( ZLVec2D& sphereLoc, ZLVec2D& contact, ZLVec2D& norm ) const {
+bool ZLSurface2D::GetContact ( ZLVec2D& sphereLoc, ZLVec2D& contact, ZLVec2D& norm, float& dist ) const {
 
 	// The usual stuff...
-	float dist = ZLDist::PointToPlane2D ( sphereLoc, *this );
+	dist = ZLDist::PointToPlane2D ( sphereLoc, *this );
 	if ( dist <= 0.0f ) return false;
-	if ( dist > 1.001f ) return false;
+	if ( dist > 1.0f ) return false;
 	
 	// Get the point of first contact on the polygon...
 	contact = this->mNorm;
@@ -101,8 +80,7 @@ bool ZLSurface2D::GetContact ( ZLVec2D& sphereLoc, ZLVec2D& contact, ZLVec2D& no
 	norm.Sub ( contact );
 	dist = norm.NormSafe ();
 	
-	if ( dist > 1.001f ) return false;
-	return true;
+	return dist <= 1.0f;
 }
 
 //----------------------------------------------------------------//
@@ -324,7 +302,17 @@ bool ZLSurface2D::GetTouch ( ZLVec2D& sphereLoc, ZLSurfaceTouch2D& touch ) const
 }
 
 //----------------------------------------------------------------//
+void ZLSurface2D::GetVertices ( ZLVec2D& v0, ZLVec2D& v1 ) const {
+
+	v0 = this->mE0;
+	v1 = this->mE1;
+}
+
+//----------------------------------------------------------------//
 void ZLSurface2D::Init ( const ZLVec2D& e0, const ZLVec2D& e1 ) {
+
+	this->mE0 = e0;
+	this->mE1 = e1;
 
 	ZLVec2D worldNorm = this->GetNorm ( e0, e1 );
 

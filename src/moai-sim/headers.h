@@ -117,6 +117,8 @@
 #include <moai-sim/MOAIShaderProgram.h>
 #include <moai-sim/MOAIShaderUniform.h>
 #include <moai-sim/MOAISim.h>
+#include <moai-sim/MOAISimpleSurfaceFeeler2D.h>
+#include <moai-sim/MOAISimpleSurfaceFeelerState2D.h>
 #include <moai-sim/MOAISingleTexture.h>
 #include <moai-sim/MOAISpanList.h>
 #include <moai-sim/MOAIStandardDeck.h>
@@ -124,6 +126,7 @@
 #include <moai-sim/MOAISurfaceDeck2D.h>
 #include <moai-sim/MOAISurfaceFeeler2D.h>
 #include <moai-sim/MOAISurfaceFeelerState2D.h>
+#include <moai-sim/MOAISurfaceProp2D.h>
 #include <moai-sim/MOAITexture.h>
 #include <moai-sim/MOAITextureBase.h>
 #include <moai-sim/MOAITileDeck2D.h>

@@ -23,6 +23,12 @@ class MOAIVertexBuffer;
 class MOAIVertexFormat;
 class MOAIViewport;
 
+// TODO: All this crap needs to get pushed down into zlgfx. The implementation of ZLGfxImmediate, in particular. Way
+// too low level to be here, and just makes the render code more confusing. Also, pushing down will make it much
+// easier to expose display lists as a framework-wide concept, and to add support for drawing higher level primitives
+// inside the display list. And can more easily layer in a "nice" line-drawing mode. So... bunch of reasons to move
+// this down.
+
 //================================================================//
 // MOAIGfxDeviceStateCache
 //================================================================//

@@ -48,7 +48,6 @@ void MOAISurfaceSampler2D::AddSurfaceFromWorld ( ZLVec2D v0, ZLVec2D v1 ) {
 	}
 }
 
-
 //----------------------------------------------------------------//
 void MOAISurfaceSampler2D::Clear () {
 

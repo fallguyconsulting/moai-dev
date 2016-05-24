@@ -300,7 +300,10 @@ int MOAIProp::_setBoundsPad ( lua_State* L ) {
 int MOAIProp::_setDeck ( lua_State* L ) {
 	MOAI_LUA_SETUP ( MOAIProp, "U" )
 
-	self->mDeck.Set ( *self, state.GetLuaObject < MOAIDeck >( 2, true ));
+	MOAIDeck* deck = state.GetLuaObject < MOAIDeck >( 2, true );
+
+	self->mDeck.Set ( *self, deck );
+	self->OnSetDeck ( deck );
 	self->ScheduleUpdate ();
 	return 0;
 }
@@ -514,6 +517,13 @@ void MOAIProp::AddToSortBuffer ( MOAIPartitionResultBuffer& buffer, u32 key ) {
 		
 		MOAICellCoord c0;
 		MOAICellCoord c1;
+		
+		// TODO: the whole idea of doing a frustum cull here is ass backwards. the
+		// cull should be decided by whatever is doing the partition query, not by
+		// the object of the query. doing if here makes the possibly wrong assumption
+		// that the object is being queried for just for draw. that said, there is a
+		// challende with passing in the query shape, as a version of this method
+		// would need to be created for each shape type.
 		
 		// TODO: this needs to be pushed up one level to GatherProps
 		// should not assume anything about the view or rendering
@@ -785,6 +795,15 @@ void MOAIProp::OnBoundsChanged () {
 
 //----------------------------------------------------------------//
 void MOAIProp::OnRemoved () {
+}
+
+//----------------------------------------------------------------//
+// TODO: this is a workaround for now. eventually need to decouple deck, prop and partition. but for
+// now this gives us a way to add deck and prop types without bloating the base deck's functionality.
+// new props types can override this method to grab specific interfaces out of a deck when it is set.
+// (to cache them, as opposed to having to do a dynamic cast during time-sensitive operations.)
+void MOAIProp::OnSetDeck ( MOAIDeck* deck ) {
+	UNUSED ( deck );
 }
 
 //----------------------------------------------------------------//

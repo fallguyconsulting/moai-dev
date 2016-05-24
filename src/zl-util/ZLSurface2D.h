@@ -52,6 +52,9 @@ class ZLSurface2D :
 	public ZLPlane2D {
 public:
 
+	ZLVec2D			mE0;
+	ZLVec2D			mE1;
+
 	ZLVec2D			mTangent; // perp to norm
 	
 	float			mP0;
@@ -62,8 +65,7 @@ public:
 	
 	//----------------------------------------------------------------//
 	void			ClampPoint			( ZLVec2D& p ) const;
-	static void		DrawDebug			( ZLVec2D e0, ZLVec2D e1 );
-	bool			GetContact			( ZLVec2D& sphereLoc, ZLVec2D& contact, ZLVec2D& norm ) const;
+	bool			GetContact			( ZLVec2D& sphereLoc, ZLVec2D& contact, ZLVec2D& norm, float& dist ) const;
 	float			GetDepthAlongRay	( ZLVec2D& sphereLoc, ZLVec2D& ray ) const;
 	bool			GetHit				( ZLVec2D& sphereLoc, ZLVec2D& move, SurfaceHit2D& hit ) const; // unit sphere
 	static ZLVec2D	GetNorm				( const ZLVec2D& e0, const ZLVec2D& e1 );
@@ -71,6 +73,7 @@ public:
 	bool			GetRayHit			( ZLVec2D& loc, ZLVec2D& ray, float pad, float& time ) const; // ray
 	void			GetSnapUp			( ZLVec2D& loc, float maxSnap, ZLVec2D& move, SurfaceSnap2D& snap ) const;
 	bool			GetTouch			( ZLVec2D& sphereLoc, ZLSurfaceTouch2D& touch ) const; // unit sphere
+	void			GetVertices			( ZLVec2D& v0, ZLVec2D& v1 ) const;
 	void			Init				( const ZLVec2D& e0, const ZLVec2D& e1 );
 	bool			IsBridge			( ZLVec2D& loc, ZLVec2D& move ) const;
 	bool			IsLeaving			( ZLVec2D& loc, ZLVec2D& move ) const;
